@@ -29,9 +29,9 @@ def parseTagged(line, fp=None, i=0,j=0):
             #     print(line)
             # if p1=='':
             #     print(old_line)
-            if p2 in {'rs','nd','nrf','dp'}:
-                print(fp,line[j])
-                print(old_line)
+            # if p2 in {'rs','nd','nrf','dp'}:
+            #     print(fp,line[j])
+            #     print(old_line)
 
             # if p2 == 'nr' and len(p1)==1:
             #     print(line[j-1],line[j],line[j+1])
@@ -43,8 +43,8 @@ def parseTagged(line, fp=None, i=0,j=0):
             #     print(j)
             #     print(line)
             #     print()
-            if p2 in {'an','vn','l'}:
-                print(p1+p2)
+            # if p2 in {'an','vn','l'}:
+            #     print(p1+p2)
             s.append(p1)
             t.append(p2)
             # if '-' in p2:
@@ -350,12 +350,64 @@ def loadNewPeopleDailyData(fp):
     print('load pku data successfully!')
     return train,test
 
+def loadQiuPKU(fp):
+    f = open(fp,'r',encoding='utf-8')
+    lines = f.readlines()
+    segmenteds = []
+    tags = []
+    sentences = []
+    for line in lines:
+        s,t = parseTagged(line)
+        segmenteds.append(s)
+        tags.append(t)
+        sentences.append(''.join(s))
+
+
+    all = []
+    for i in range(len(segmenteds)):
+        all.append([segmenteds[i],tags[i],sentences[i]])
+
+    random.seed(1208)
+    # random.shuffle(all)
+
+    train_pair = all[:len(all)-1500]
+    test_pair = all[len(all)-1500:]
+
+    train_segmenteds = []
+    train_tags = []
+    train_sentences = []
+
+    test_segmenteds = []
+    test_tags = []
+    test_sentences = []
+
+    for i in range(len(train_pair)):
+        train_segmenteds.append(train_pair[i][0])
+        train_tags.append(train_pair[i][1])
+        train_sentences.append(train_pair[i][2])
+
+    for i in range(len(test_pair)):
+        test_segmenteds.append(test_pair[i][0])
+        test_tags.append(test_pair[i][1])
+        test_sentences.append(test_pair[i][2])
+
+
+    train = [train_segmenteds,train_tags,train_sentences]
+    test = [test_segmenteds,test_tags,test_sentences]
+
+    print('load pku data successfully!')
+    return train,test
 
 
 if __name__ == '__main__':
-    new_root = r'D:\wias_nlp\data\pku98\pku98\199801.txt'
-    train,test = loadNewPeopleDailyData(new_root)
-    print(sum(list(map(len,train[2])))/len(train[2]))
+    new_root = r'D:\wias_nlp\data\qiu\199801.segged_known.txt'
+    train,test = loadQiuPKU(new_root)
+    for i,s in enumerate(train[0][:10]):
+        for j,w in enumerate(s):
+            print(w,train[1][i][j])
+        print("*************")
+    # train,test = loadNewPeopleDailyData(new_root)
+    # print(sum(list(map(len,train[2])))/len(train[2]))
     # train = loadPeopleDailyData(r'D:\wias_nlp\data\199801\199802.txt')
     # print(len(train[0]))
     # t = BaseTagger()
