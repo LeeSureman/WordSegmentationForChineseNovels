@@ -350,7 +350,7 @@ def loadNewPeopleDailyData(fp):
     print('load pku data successfully!')
     return train,test
 
-def loadQiuPKU(fp):
+def loadQiuPKU(fp,seed):
     f = open(fp,'r',encoding='utf-8')
     lines = f.readlines()
     segmenteds = []
@@ -367,8 +367,9 @@ def loadQiuPKU(fp):
     for i in range(len(segmenteds)):
         all.append([segmenteds[i],tags[i],sentences[i]])
 
-    random.seed(1208)
-    # random.shuffle(all)
+    if seed>=0:
+        random.seed(seed)
+        random.shuffle(all)
 
     train_pair = all[:len(all)-1500]
     test_pair = all[len(all)-1500:]

@@ -911,6 +911,7 @@ if __name__ == '__main__':
     parser.add_argument('--mode',help='train or test')
     parser.add_argument('--start_test',help='the epoch after which start test',default=15)
     parser.add_argument('--new_feature',default=True,help='whether to include the feature new')
+    parser.add_argument('--data_seed',default=-1,type=int,help='how to seg the data')
     args = parser.parse_args()
 
     t1 = BaseTagger(args)
