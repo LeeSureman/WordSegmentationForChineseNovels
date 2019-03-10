@@ -971,9 +971,9 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default='ri')
     args = parser.parse_args()
 
-    f_add = open(args.record+'/error_record.txt','a',encoding='utf-8')
-    print(args.add,file=f_add)
-    f_add.close()
+    # f_add = open(args.record+'/error_record.txt','a',encoding='utf-8')
+    print(args.add)
+    # f_add.close()
 
     t1 = EnhancedTagger(args)
     train,test = loadNewPeopleDailyData(args.train)
