@@ -969,6 +969,7 @@ if __name__ == '__main__':
     parser.add_argument('--pku_dict',help='the common word in pku dict')
     parser.add_argument('--add',default=None)
     parser.add_argument('--new_feature',default='ri')
+    parser.add_argument('--data_seed',default=-1,type=int,help='how to seg data')
     args = parser.parse_args()
 
     # f_add = open(args.record+'/error_record.txt','a',encoding='utf-8')
@@ -985,7 +986,7 @@ if __name__ == '__main__':
 
     if args.mode =='train':
         if args.dataset_train == 'pku':
-            train_p,test_p = loadQiuPKU(args.train)
+            train_p,test_p = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train_p,dev_p,test_p = loadCTB3Data(args.train)
         else:
@@ -1002,7 +1003,7 @@ if __name__ == '__main__':
 
     elif args.mode =='test':
         if args.dataset_train == 'pku':
-            train,test = loadQiuPKU(args.train)
+            train,test = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train,dev,test = loadCTB3Data(args.train)
 
@@ -1038,7 +1039,7 @@ if __name__ == '__main__':
 
     elif args.mode == 'tag':
         if args.dataset_train == 'pku':
-            train,test = loadQiuPKU(args.train)
+            train,test = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train,dev,test = loadCTB3Data(args.train)
 
