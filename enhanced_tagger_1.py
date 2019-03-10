@@ -976,8 +976,8 @@ if __name__ == '__main__':
     # f_add.close()
 
     t1 = EnhancedTagger(args)
-    train,test = loadNewPeopleDailyData(args.train)
-    t1.prepareKnowledge(train)
+    # train,test = loadNewPeopleDailyData(args.train)
+    # t1.prepareKnowledge(train)
     if args.init_weight:
         t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
 
