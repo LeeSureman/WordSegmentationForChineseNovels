@@ -422,7 +422,7 @@ if __name__ == '__main__':
     # print(standard_tag_set-t.tag_set)
     # exit(1)
     # root = r'D:\yue zhang\ctb8.0\data\postagged'
-    # train_n = loadNovelData(r'D:\wias_nlp\data\gold')
+    # train_n = loadNovelData(r'D:\wias_nlp\data\novel')
     # print(train_n[0])
     # t = BaseTagger()
     # t.prepareKnowledge(train_n)
@@ -450,7 +450,7 @@ if __name__ == '__main__':
     # print(standard_tag_set-t1.tag_set)
     #
     #
-    # train_n = loadNovelData(r'D:\wias_nlp\data\gold')
+    # train_n = loadNovelData(r'D:\wias_nlp\data\novel')
     # # print(train_n[0])
     # t = BaseTagger()
     # t.prepareKnowledge(train_n)

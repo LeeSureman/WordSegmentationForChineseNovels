@@ -89,8 +89,8 @@ class State(object):
         wl = self.nowWordLen()
         # print('l:', l)
         # if l == 0:
-        #     self.word.append(gold.word[0][0])
-        #     self.tag.append(gold.tag[0])
+        #     self.word.append(novel.word[0][0])
+        #     self.tag.append(novel.tag[0])
         #     self.charLen += 1
         #     return
         if len(gold.word[l - 1]) > wl:
@@ -437,8 +437,8 @@ class BaseTagger(object):
                             print(t,end='-')
                         print('')
                         f.write('\n')
-                        f.write('gold:\n')
-                        print('gold:\n',end='')
+                        f.write('novel:\n')
+                        print('novel:\n',end='')
                         for w in gold.word:
                             f.write(w+'-')
                             print(w,end='-')
@@ -523,7 +523,7 @@ class BaseTagger(object):
                     #         max_index = i
                     #
                     # self.updateScoreForState(self.agenda.old[max_index], -1, i_round)
-                    # self.updateScoreForState(gold, 1, i_round)
+                    # self.updateScoreForState(novel, 1, i_round)
 
                 else: #if in test and all state cut by pruning, just don't use prune temporarily
                     for old_state in self.agenda.old:
@@ -577,8 +577,8 @@ class BaseTagger(object):
                         print(t, end='-')
                     print('')
                     f.write('\n')
-                    f.write('gold:\n')
-                    print('gold:\n', end='')
+                    f.write('novel:\n')
+                    print('novel:\n', end='')
                     for w in gold.word:
                         f.write(w + '-')
                         print(w, end='-')
@@ -591,7 +591,7 @@ class BaseTagger(object):
                     print('')
                 return 0
             else:
-                # if '（' in gold.word or ')' in gold.word:
+                # if '（' in novel.word or ')' in novel.word:
                 #     print('predict wrong')
                 self.updateScoreForState(self.agenda.old[max_index], -1, i_round)
                 self.updateScoreForState(gold, 1,i_round)
@@ -611,8 +611,8 @@ class BaseTagger(object):
                         print(t, end='-')
                     print('')
                     f.write('\n')
-                    f.write('gold:\n')
-                    print('gold:\n', end='')
+                    f.write('novel:\n')
+                    print('novel:\n', end='')
                     for w in gold.word:
                         f.write(w + '-')
                         print(w, end='-')
@@ -825,8 +825,8 @@ class BaseTagger(object):
             predict = self.tag(test_sentence[i],False,self.judge_by_rule(test_sentence[i]))
             # print('predict word:',predict.word)
             # print('predict tag',predict.tag)
-            # print('gold word',gold.word)
-            # print('gold tag',gold.tag)
+            # print('novel word',novel.word)
+            # print('novel tag',novel.tag)
             if type(predict) == int:
                 print('shit,return int when test')
                 continue
@@ -861,8 +861,8 @@ class BaseTagger(object):
     #         predict = self.tag(test_set[2][i],False,self.judge_by_rule(test_set[2][i]))
     #         # print('predict word:',predict.word)
     #         # print('predict tag',predict.tag)
-    #         # print('gold word',gold.word)
-    #         # print('gold tag',gold.tag)
+    #         # print('novel word',novel.word)
+    #         # print('novel tag',novel.tag)
     #         s_c_n,j_c_n,p_a_n,g_a_n = countCorrect(predict,State(test_set[0][i],test_set[1][i],isGold=True))
     #         seg_correct_num+=s_c_n
     #         joint_correct_num+=j_c_n
