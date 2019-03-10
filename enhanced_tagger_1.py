@@ -981,86 +981,86 @@ if __name__ == '__main__':
     if args.init_weight:
         t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
 
-    t1.train(train,args.start,args.epoch,test_set=test,args=args)
+    # t1.train(train,args.start,args.epoch,test_set=test,args=args)
 
-    # if args.mode =='train':
-    #     if args.dataset_train == 'pku':
-    #         train_p,test_p = loadNewPeopleDailyData(args.train)
-    #     elif args.dataset_train == 'ctb':
-    #         train_p,dev_p,test_p = loadCTB3Data(args.train)
-    #     else:
-    #         print('non-support dataset!')
-    #         print(len(args.dataset_train))
-    #         print(repr(args.dataset_train))
-    #         exit(2)
-    #
-    #     t1.prepareKnowledge(train_p)
-    #     if args.init_weight:
-    #         t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
-    #
-    #     t1.train(train_p,args.start,args.epoch,test_set=test_p,args=args)
-    #
-    # elif args.mode =='test':
-    #     if args.dataset_train == 'pku':
-    #         train,test = loadNewPeopleDailyData(args.train)
-    #     elif args.dataset_train == 'ctb':
-    #         train,dev,test = loadCTB3Data(args.train)
-    #
-    #     # if args.dataset_test == 'pku':
-    #     #     test = loadNewPeopleDailyData(args.test)
-    #     if args.dataset_test == 'novel':
-    #         test = loadNovelData(args.test)
-    #
-    #
-    #
-    #
-    #     t1.prepareKnowledge(train)
-    #
-    #     if not args.init_weight:
-    #         print('no init weight, test no meaning')
-    #     else:
-    #         t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
-    #
-    #     t1.weight.accumulateAll(int(args.start))
-    #     t1.weight.useAverage(int(args.start))
-    #
-    #     # test = [test[0][0:400],test[1][0:400],test[2][0:400]]
-    #     test_gold_state = []
-    #     for i in range(len(test[0])):
-    #         test_gold_state.append(State(test[0][i],test[1][i],isGold=True))
-    #
-    #     result = t1.test(test[2],test_gold_state)
-    #     print('average:',result)
-    #
-    #     t1.weight.useRaw()
-    #     result = t1.test(test[2],test_gold_state)
-    #     print('unaverage:',result)
-    #
-    # elif args.mode == 'tag':
-    #     if args.dataset_train == 'pku':
-    #         train,test = loadNewPeopleDailyData(args.train)
-    #     elif args.dataset_train == 'ctb':
-    #         train,dev,test = loadCTB3Data(args.train)
-    #
-    #     t1.prepareKnowledge(train)
-    #
-    #     if args.init_weight:
-    #         t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
-    #     else:
-    #         print('no init_weight, tag no meaning!')
-    #         exit(2)
-    #
-    #     print('load weight finish!')
-    #     t1.weight.accumulateAll(int(args.start))
-    #     t1.weight.useAverage(int(args.start))
-    #
-    #     while True:
-    #         tobe_tagged = input()
-    #     #         old_to = tobe_tagged
-    #     #         tobe_tagged = ''.join(parseTagged(tobe_tagged)[0])
-    #     #         if len(tobe_tagged)==0:
-    #     #             tobe_tagged = old_to
-    #     #         tmp_state = t1.tag(tobe_tagged,False,t1.judge_by_rule(tobe_tagged))
-    #     #         print(len(tmp_state.word))
-    #     #         for i in range(len(tmp_state.word)):
-    #     #             print(tmp_state.word[i]+'_'+tmp_state.tag[i]+' ',end='')
+    if args.mode =='train':
+        if args.dataset_train == 'pku':
+            train_p,test_p = loadQiuPKU(args.train)
+        elif args.dataset_train == 'ctb':
+            train_p,dev_p,test_p = loadCTB3Data(args.train)
+        else:
+            print('non-support dataset!')
+            print(len(args.dataset_train))
+            print(repr(args.dataset_train))
+            exit(2)
+
+        t1.prepareKnowledge(train_p)
+        if args.init_weight:
+            t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
+
+        t1.train(train_p,args.start,args.epoch,test_set=test_p,args=args)
+
+    elif args.mode =='test':
+        if args.dataset_train == 'pku':
+            train,test = loadQiuPKU(args.train)
+        elif args.dataset_train == 'ctb':
+            train,dev,test = loadCTB3Data(args.train)
+
+        # if args.dataset_test == 'pku':
+        #     test = loadNewPeopleDailyData(args.test)
+        if args.dataset_test == 'novel':
+            test = loadNovelData(args.test)
+
+
+
+
+        t1.prepareKnowledge(train)
+
+        if not args.init_weight:
+            print('no init weight, test no meaning')
+        else:
+            t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
+
+        t1.weight.accumulateAll(int(args.start))
+        t1.weight.useAverage(int(args.start))
+
+        # test = [test[0][0:400],test[1][0:400],test[2][0:400]]
+        test_gold_state = []
+        for i in range(len(test[0])):
+            test_gold_state.append(State(test[0][i],test[1][i],isGold=True))
+
+        result = t1.test(test[2],test_gold_state)
+        print('average:',result)
+
+        t1.weight.useRaw()
+        result = t1.test(test[2],test_gold_state)
+        print('unaverage:',result)
+
+    elif args.mode == 'tag':
+        if args.dataset_train == 'pku':
+            train,test = loadQiuPKU(args.train)
+        elif args.dataset_train == 'ctb':
+            train,dev,test = loadCTB3Data(args.train)
+
+        t1.prepareKnowledge(train)
+
+        if args.init_weight:
+            t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
+        else:
+            print('no init_weight, tag no meaning!')
+            exit(2)
+
+        print('load weight finish!')
+        t1.weight.accumulateAll(int(args.start))
+        t1.weight.useAverage(int(args.start))
+
+        while True:
+            tobe_tagged = input()
+        #         old_to = tobe_tagged
+        #         tobe_tagged = ''.join(parseTagged(tobe_tagged)[0])
+        #         if len(tobe_tagged)==0:
+        #             tobe_tagged = old_to
+        #         tmp_state = t1.tag(tobe_tagged,False,t1.judge_by_rule(tobe_tagged))
+        #         print(len(tmp_state.word))
+        #         for i in range(len(tmp_state.word)):
+        #             print(tmp_state.word[i]+'_'+tmp_state.tag[i]+' ',end='')
