@@ -236,7 +236,7 @@ def loadPeopleDailyData(fp):
 
     # random.shuffle(pairs)
 
-    train_pair = pairs[:1500]
+    train_pair = pairs
 
     train = []
     train_word = []
@@ -402,11 +402,29 @@ def loadQiuPKU(fp,seed):
 
 if __name__ == '__main__':
     new_root = r'D:\wias_nlp\data\qiu\199801.segged_known.txt'
-    train,test = loadQiuPKU(new_root)
-    for i,s in enumerate(train[0][:10]):
-        for j,w in enumerate(s):
-            print(w,train[1][i][j])
-        print("*************")
+    train,test = loadQiuPKU(new_root,-1)
+    qiu_pos_set = set()
+    for i,poses in enumerate(train[1]):
+        for j,pos in enumerate(poses):
+            qiu_pos_set.add(pos)
+
+    print(len(qiu_pos_set),qiu_pos_set)
+
+    bo_root = r'D:\wias_nlp\data\bo_pku\199801.txt'
+    train_bo = loadPeopleDailyData(bo_root)
+
+    bo_pos_set = set()
+    for i,poses in enumerate(train_bo[1]):
+        for j,pos in enumerate(poses):
+            bo_pos_set.add(pos)
+    print(len(bo_pos_set),bo_pos_set)
+
+    print(bo_pos_set-qiu_pos_set)
+    print(qiu_pos_set-bo_pos_set)
+    # for i,s in enumerate(train[0][:10]):
+    #     for j,w in enumerate(s):
+    #         print(w,train[1][i][j])
+    #     print("*************")
     # train,test = loadNewPeopleDailyData(new_root)
     # print(sum(list(map(len,train[2])))/len(train[2]))
     # train = loadPeopleDailyData(r'D:\wias_nlp\data\199801\199802.txt')

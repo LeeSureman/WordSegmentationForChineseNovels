@@ -844,7 +844,8 @@ class EnhancedTagger(object):
                 # f_unaveraged.close()
                 # print('two f for debug save !')
                 result = self.test(test_set[2],test_gold_state)
-                f_error.write('averaged weight result: '+str(result)+'\n')
+                if self.args.record:
+                    f_error.write('averaged weight result: '+str(result)+'\n')
                 print('averaged weight result: '+str(result))
                 new_time  = time.time()
                 print('test time_spent: ',new_time-old_time)
