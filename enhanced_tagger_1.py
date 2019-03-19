@@ -740,8 +740,8 @@ class EnhancedTagger(object):
         features.append(isNoun0Tag0Len0(state,self.W))
         features.append(isNoun1Tag1Len1(state,self.W))
         features.append(isNoun2Tag2Len2(state,self.W))
-        features.append(ispatternTag1Len1(state,self.ispatternSet))
-        features.append(istrippleTag1Len1_1(state,self.istrippleSet,self.W))
+        # features.append(ispatternTag1Len1(state,self.ispatternSet))
+        # features.append(istrippleTag1Len1_1(state,self.istrippleSet,self.W))
         if amount == 0:
             score = 0
             for feature in features:
