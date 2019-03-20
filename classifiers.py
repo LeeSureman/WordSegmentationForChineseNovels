@@ -132,8 +132,8 @@ class WordClassifier(object):
         self.x = np.array(self.x)
         self.y = np.array(self.y)
 
-        for i in range(self.x.shape[0]):
-            print('x:',self.x[i],'y:',self.y[i])
+        # for i in range(self.x.shape[0]):
+        #     print('x:',self.x[i],'y:',self.y[i])
 
         pair = np.concatenate([self.x, self.y], axis=1)
         np.random.seed(100)
