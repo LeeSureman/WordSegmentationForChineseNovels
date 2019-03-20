@@ -47,13 +47,14 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_train', help='ctb or pku')
     parser.add_argument('--new_feature',default='1')
     parser.add_argument('--record',default=None)
+    parser.add_argument('--data_seed',type=int,default=-1)
 
     args = parser.parse_args()
 
     b_t = BaseTagger(args)
     e_t = EnhancedTagger(args)
 
-    train,test = loadNewPeopleDailyData(args.train)
+    train,test = loadQiuPKU(args.train,args.data_seed)
 
 
     novel_test = loadNovelData(args.test)
