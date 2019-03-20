@@ -221,14 +221,14 @@ def count_p_between_2_10(state,i,noun2pattern,isNegative=False):
         count = len(noun2pattern.setdefault(state.word[i]+state.word[i+1],set()))
     else:
         count = len(noun2pattern.setdefault(state.word[i],set()))
-    return int(count<10 and count>1)
+    return int(count<10 and count>=1)
 
 def count_p_equal_1(state,i,noun2pattern,isNegative=False):
     if isNegative:
         count = len(noun2pattern.setdefault(state.word[i]+state.word[i+1], set()))
     else:
         count = len(noun2pattern.setdefault(state.word[i],set()))
-    return int(count==1)
+    return int(count==0)
 
 def freq_p_bigger_50(state,i,noun2pattern_freq,isNegative=False):
     if isNegative:
