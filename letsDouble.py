@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--mode',help='tag or test')
     parser.add_argument('--output_tagged',help='the path of the tagged sentenced')
-    parser.add_argument('--is_raw',default=True,help='the data format when tagging',type=bool)
+    parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
 
     args = parser.parse_args()
 
