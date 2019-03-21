@@ -543,7 +543,7 @@ class EnhancedTagger(object):
                 print(self.agenda.old[0].tag)
                 print('\n',i)
 
-                if args.record:
+                if self.args.record:
                     f_error = open(args.record + '/error_record.txt', 'a', encoding='utf-8')
                     print(rule[i],file=f_error)
                     print(self.agenda.old[0].word,file=f_error)
