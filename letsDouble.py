@@ -50,7 +50,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_seed',type=int,default=-1)
 
     parser.add_argument('--mode',help='tag or test')
-    parser.add_argument('--output_tagged',help='the path of the tagged sentenced')
+    parser.add_argument('--output_tagged',help='the path of the tagged sentenced',default=None)
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
 
     args = parser.parse_args()
@@ -271,8 +271,11 @@ if __name__ == '__main__':
             n_count = 0
             W_candidate = copy.deepcopy(W_candidate_copy)
 
-
-        f = open(args.output_tagged,'r',encoding='utf-8')
+        if args.output_tagged==None:
+            f = open('tmp_result','a',encoding='utf-8')
+            print('********new tag result********',file=f)
+        else:
+            f = open(args.output_tagged,'w',encoding='utf-8')
         for line in novel_raw:
             tmp_r = e_t.tag(line,False,e_t.judge_by_rule(line))
             now_line = []
