@@ -55,15 +55,15 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
-    print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
+    # print(args.is_raw)
 
     b_t = BaseTagger(args)
     e_t = EnhancedTagger(args)
@@ -173,20 +173,20 @@ if __name__ == '__main__':
         train,test = loadQiuPKU(args.train,args.data_seed)
 
         if args.is_raw:
-            print('israw!')
+            # print('israw!')
             novel_fp = open(args.test, 'r', encoding='utf-8')
             novel_raw = novel_fp.readlines()
 
         else:
-            print('is not raw!')
+            # print('is not raw!')
             novel_test = loadNovelData(args.test)
         # novel_fp = open(args.test,'r',encoding='utf-8')
             novel_raw = novel_test[2]
 
 
-        for line in novel_raw[:10]:
-            print(line)
-        exit(2)
+        # for line in novel_raw[:10]:
+        #     print(line)
+        # exit(2)
 
         for i,line in enumerate(novel_raw):
             novel_raw[i] = line.strip()
