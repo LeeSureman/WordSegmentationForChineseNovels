@@ -275,7 +275,8 @@ if __name__ == '__main__':
 
         for line in novel_raw:
             tmp_r = e_t.tag(line,False,e_t.judge_by_rule(line))
-            print(tmp_r)
+            print(tmp_r.word)
+            print(tmp_r.tag)
         # noun_acc = len(novel_noun_set & e_t.W) / len(e_t.W)
 
         # b_result = b_t.test(novel_test[2],novel_gold_state)
