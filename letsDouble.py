@@ -272,11 +272,14 @@ if __name__ == '__main__':
             W_candidate = copy.deepcopy(W_candidate_copy)
 
 
-
+        f = open(args.output_tagged,'r',encoding='utf-8')
         for line in novel_raw:
             tmp_r = e_t.tag(line,False,e_t.judge_by_rule(line))
-            print(tmp_r.word)
-            print(tmp_r.tag)
+            now_line = []
+            for i,w in enumerate(tmp_r.word):
+                if tmp_r.tag[i]!='PAD' and w!=' ':
+                    now_line.append(w+'_'+tmp_r.tag[i])
+            print(' '.join(now_line),file=f)
         # noun_acc = len(novel_noun_set & e_t.W) / len(e_t.W)
 
         # b_result = b_t.test(novel_test[2],novel_gold_state)
