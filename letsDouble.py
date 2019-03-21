@@ -159,7 +159,7 @@ if __name__ == '__main__':
         # print('w:',e_t.wc.lr.w)
         # print('b:',e_t.wc.lr.b)
 
-    else if args.mode =='tag':
+    elif args.mode =='tag' :
         train,test = loadQiuPKU(args.train,args.data_seed)
 
         if args.is_raw:
