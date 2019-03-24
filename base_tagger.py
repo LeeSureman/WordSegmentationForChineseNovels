@@ -913,6 +913,7 @@ if __name__ == '__main__':
     parser.add_argument('--start_test',help='the epoch after which start test',default=15)
     parser.add_argument('--new_feature',default=True,help='whether to include the feature new')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg the data')
+    parser.add_argument('--output_tagged',default=None,help='the path to output auto-tagged when mode is tag')
     args = parser.parse_args()
 
     t1 = BaseTagger(args)
@@ -975,6 +976,14 @@ if __name__ == '__main__':
         result = t1.test(test[2],test_gold_state)
         print('unaverage:',result)
 
+        if args.output_tagged is not None:
+            f = open(args.output_tagged,'w',encoding='utf-8')
+            for s in train[2]:
+                tmp_state = t1.tag(s,False,t1.judge_by_rule(s))
+                for i in range(2,len(tmp_state.word)-1):
+                    print(tmp_state.word[i]+'_'+tmp_state.tag[i],end=' ',file=f)
+                print('',file=f)
+
     elif args.mode == 'tag':
         if args.dataset_train == 'pku':
             train,test = loadQiuPKU(args.train,args.data_seed)
@@ -993,6 +1002,8 @@ if __name__ == '__main__':
         t1.weight.accumulateAll(int(args.start))
         t1.weight.useAverage(int(args.start))
 
+
+
         while True:
             tobe_tagged = input()
             old_to = tobe_tagged
@@ -1001,5 +1012,5 @@ if __name__ == '__main__':
                 tobe_tagged = old_to
             tmp_state = t1.tag(tobe_tagged,False,t1.judge_by_rule(tobe_tagged))
             print(len(tmp_state.word))
-            for i in range(len(tmp_state.word)):
+            for i in range(2,len(tmp_state.word)-1):
                 print(tmp_state.word[i]+'_'+tmp_state.tag[i]+' ',end='')

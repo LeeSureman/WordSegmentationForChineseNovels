@@ -366,7 +366,8 @@ def loadQiuPKU(fp,seed):
     all = []
     for i in range(len(segmenteds)):
         all.append([segmenteds[i],tags[i],sentences[i]])
-
+    if(seed == -2):
+        return segmenteds,tags,sentences
     if seed>=0:
         random.seed(seed)
         random.shuffle(all)

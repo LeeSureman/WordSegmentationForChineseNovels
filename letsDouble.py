@@ -36,7 +36,7 @@ if __name__ == '__main__':
     parser.add_argument('--test', default=None, help='if mode is test,it is annotated,if mode is tag,it is raw')
     # parser.add_argument('--record', default=None, help='file output to record measure')
     # parser.add_argument('--weight', default=None, help='weight output to')
-    parser.add_argument('--start', default=0, type=int, help='set the round')
+    # parser.add_argument('--start', default=0, type=int, help='set the round')
     # parser.add_argument('--epoch', default=10, type=int, help='as the name')
     parser.add_argument('--base_weight',required=True,default=None,help='base weight')
     parser.add_argument('--enhanced_weight',required=True,help='enhanced weight')
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     parser.add_argument('--add',default='')
     parser.add_argument('--dataset_train', help='ctb or pku')
     parser.add_argument('--new_feature',default='1')
-    parser.add_argument('--record',default=None)
+    # parser.add_argument('--record',default=None)
     parser.add_argument('--data_seed',type=int,default=-1)
 
     parser.add_argument('--mode',help='tag or test')
