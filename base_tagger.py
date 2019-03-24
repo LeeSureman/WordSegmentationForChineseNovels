@@ -978,7 +978,7 @@ if __name__ == '__main__':
 
         if args.output_tagged is not None:
             f = open(args.output_tagged,'w',encoding='utf-8')
-            for s in train[2]:
+            for s in test[2]:
                 tmp_state = t1.tag(s,False,t1.judge_by_rule(s))
                 for i in range(2,len(tmp_state.word)-1):
                     print(tmp_state.word[i]+'_'+tmp_state.tag[i],end=' ',file=f)
