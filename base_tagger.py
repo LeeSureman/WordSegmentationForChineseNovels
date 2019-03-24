@@ -960,6 +960,14 @@ if __name__ == '__main__':
         t1.weight.accumulateAll(int(args.start))
         t1.weight.useAverage(int(args.start))
 
+        if args.output_tagged is not None:
+            f = open(args.output_tagged,'w',encoding='utf-8')
+            for s in test[2]:
+                tmp_state = t1.tag(s,False,t1.judge_by_rule(s))
+                for i in range(2,len(tmp_state.word)-1):
+                    print(tmp_state.word[i]+'_'+tmp_state.tag[i],end=' ',file=f)
+                print('',file=f)
+
         # test = [test[0][0:400],test[1][0:400],test[2][0:400]]
         test_gold_state = []
         for i in range(len(test[0])):
@@ -976,13 +984,6 @@ if __name__ == '__main__':
         result = t1.test(test[2],test_gold_state)
         print('unaverage:',result)
 
-        if args.output_tagged is not None:
-            f = open(args.output_tagged,'w',encoding='utf-8')
-            for s in test[2]:
-                tmp_state = t1.tag(s,False,t1.judge_by_rule(s))
-                for i in range(2,len(tmp_state.word)-1):
-                    print(tmp_state.word[i]+'_'+tmp_state.tag[i],end=' ',file=f)
-                print('',file=f)
 
     elif args.mode == 'tag':
         if args.dataset_train == 'pku':
