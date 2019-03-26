@@ -318,7 +318,7 @@ class EnhancedTagger(object):
                             {states[i].word[j-1]+'-'+states[i].word[j+1]}
 
         for w,p_s in self.noun2pattern.items():
-            if len(p_s)>1:
+            if len(p_s)>1 and w not in self.pku_dict:
                 self.W.add(w)
 
         if ' ' in self.W:
