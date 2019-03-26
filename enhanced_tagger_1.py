@@ -762,6 +762,7 @@ class EnhancedTagger(object):
             print(state.word[-1])
             print(state.whole_s[state.charLen-1:state.charLen-1+i])
             if state.whole_s[state.charLen-1:state.charLen-1+i] in self.W:
+                print('被选中为noun')
                 now_w0_len = i
                 is_noun_candidate = True
                 break
@@ -778,6 +779,7 @@ class EnhancedTagger(object):
             print(state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i])
             if state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i] in self.P:
                 tmp_is_pattern = True
+                print('被选中为pattern')
                 break
 
         if tmp_is_pattern:
