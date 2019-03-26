@@ -317,7 +317,7 @@ class EnhancedTagger(object):
                         self.noun2pattern[states[i].word[j]] = \
                             {states[i].word[j-1]+'-'+states[i].word[j+1]}
 
-        for w,p_s in self.noun2pattern:
+        for w,p_s in self.noun2pattern.items():
             if len(p_s)>1:
                 self.W.add(w)
 
