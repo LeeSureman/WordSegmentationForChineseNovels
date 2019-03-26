@@ -656,6 +656,7 @@ if __name__ == '__main__':
     for i,words in enumerate(gold_wordss):
         for j,w in enumerate(words):
             if w not in w_c.gen_set and gold_tagss[i][j] in w_c.noun_tags:
+            # if w not in w_c.gen_set:
                 all_new_noun.add(w)
     print(all_new_noun)
     true_w = all_new_noun.intersection(w_c.W)
@@ -691,6 +692,16 @@ if __name__ == '__main__':
     print('gold:',len(all_new_noun))
     print('r:',recall,'p:',precision)
     print('f1:',2*recall*precision/(recall+precision))
+    len2freq = {}
+    for p in w_c.P:
+        c1,c2 = p.split('-')
+        len2freq[len(c2)] = len2freq.setdefault(len(c2),0)+1
+    print(len2freq)
+
+    w2freq = {}
+    for w in w_c.W:
+        w2freq[len(w)] = w2freq.setdefault(len(w),0)+1
+    print(w2freq)
 
 
 

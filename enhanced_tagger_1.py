@@ -52,7 +52,11 @@ class Action(Enum):
 
 class State(object):
 
-    def __init__(self, word=None, tag=None, isGold=False):
+    def __init__(self, word=None, tag=None, isGold=False,whole_s=None):
+        if whole_s is None:
+            print('whole_s should be not None,exit!')
+            exit()
+        self.whole_s = whole_s
         if word is None:
             word = []
         if tag is None:
@@ -274,7 +278,7 @@ class EnhancedTagger(object):
             self.pku_dict.add(line)
         states = []
         for i in range(len(training_set[0])):
-            states.append(State(training_set[0][i], training_set[1][i], True))
+            states.append(State(training_set[0][i], training_set[1][i], True,whole_s=training_set[2][i]))
 
         # self.wc = WordClassifier(self.noun_tag)
         # self.wc.prepareKnowledge(states)
@@ -289,40 +293,43 @@ class EnhancedTagger(object):
         for i in range(len(states)):
             for j in range(2,len(states[i].word)-1):
                 if states[i].tag[j] in self.noun_tag:
-                    now_pattern = states[i].word[j-1]+'_'+states[i].word[j+1]
+                    now_pattern = states[i].word[j-1]+'-'+states[i].word[j+1]
                     self.pattern2num[now_pattern] = \
                         self.pattern2num.setdefault(now_pattern,0)+1
-                    p = self.noun2pattern.get(states[i].word[j])
-                    if p:
-                        p.add(now_pattern)
-                    else:
-                        self.noun2pattern[states[i].word[j]] = {now_pattern}
+
         # print(self.pattern2num.items())
         num10 = 0
         self.P = set()
         self.W = set()
-        self.istrippleSet = set()
-        self.ispatternSet = self.istrippleSet
         for item in self.pattern2num.items():
             if item[1]>9:
                 self.P.add(item[0])
 
-            split = item[0].split('_')
-            pattern0 = split[0]+'_'+split[1][0]
-            self.istrippleSet.add(pattern0)
+        for i in range(len(states)):
+            for j in range(2,len(states[i].word)-1):
+                if states[i].tag[j] in self.noun_tag and \
+                    (states[i].word[j-1]+'-'+states[i].word[j+1]) in self.P:
+                    pattern_set = self.noun2pattern.get(states[i].word[j])
+                    if pattern_set is not None:
+                        pattern_set.add(states[i].word[j-1]+'-'+states[i].word[j+1])
+                    else:
+                        self.noun2pattern[states[i].word[j]] = \
+                            {states[i].word[j-1]+'-'+states[i].word[j+1]}
+
+        for w,p_s in self.noun2pattern:
+            if len(p_s)>1:
+                self.W.add(w)
+
+        if ' ' in self.W:
+            print('W里有空格，已去除')
+            self.W.remove(' ')
 
 
         print(list(self.P)[:40])
         print(len(self.P))
 
-
-        if True or self.args.dataset_test != 'novel':
-            for item in self.noun2pattern.items():
-                if len(item[1] & self.P)>1 and item[0] not in self.pku_dict:
-                    self.W.add(item[0])
-
-            print(list(self.W)[:40])
-            print(len(self.W))
+        print(list(self.W)[:40])
+        print(len(self.W))
 
 
 
@@ -438,8 +445,8 @@ class EnhancedTagger(object):
 
     def tag(self, sentence, isTrain, rule, i_round=None,gold=None,sentence_index = 0,isDebug=False,f=None,showPredictProcess=False):
         s = sentence
-        self.agenda.old = [State()]
-        goldFollow = State()
+        self.agenda.old = [State(whole_s=sentence)]
+        goldFollow = State(whole_s=sentence)
         for i in range(len(sentence)):
             if len(self.agenda.old) == 0:
                 print('hasnot state return 1 at index',i)
@@ -680,7 +687,7 @@ class EnhancedTagger(object):
             return self.agenda.old[max_index]
 
     def updateScoreForState(self, state, amount,i_round):
-        tmp_state = State()
+        tmp_state = State(whole_s=state.whole_s)
         # if '（' in state.word or '）' in state.word:
         #     print(state.word)
         #     print(state.tag)
@@ -737,9 +744,43 @@ class EnhancedTagger(object):
             features.append(tag0Tag1Tag2Size1(state))
 
         #以下为enhanced tagger的特征
-        features.append(isNoun0Tag0Len0(state,self.W))
-        features.append(isNoun1Tag1Len1(state,self.W))
-        features.append(isNoun2Tag2Len2(state,self.W))
+        if state.word[-3] in self.W:
+            features.append(isNoun2Tag2Len2(state))
+
+        if state.word[-2] in self.W:
+            features.append(isNoun1Tag1Len1(state))
+
+
+
+        is_noun_candidate = False
+        # tmp_s = state.word[-1]
+        now_w0_len = 0
+        for i in range(1,5):
+            print('word')
+            print(state.word[-1])
+            print(state.whole_s[state.charLen-1:state.charLen-1+i])
+            if state.whole_s[state.charLen-1:state.charLen-1+i] in self.W:
+                now_w0_len = i
+                is_noun_candidate = True
+                break
+        if is_noun_candidate:
+            features.append(isNoun0Tag0Len0(state,now_w0_len))
+
+
+        tmp_is_tripple = False
+        tmp_is_pattern = False
+        for i in range(1,5):
+            print('pattern')
+            print(state.word[-1])
+            print(state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i])
+            if state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i] in self.P:
+                tmp_is_pattern = True
+                break
+
+        if tmp_is_pattern:
+            features.append(ispatternTag1Len1(state))
+            if state.word[-2] in self.W:
+                features.append(istrippleTag1Len1(state))
         # features.append(ispatternTag1Len1(state,self.ispatternSet))
         # features.append(istrippleTag1Len1_1(state,self.istrippleSet,self.W))
         if amount == 0:
@@ -779,7 +820,7 @@ class EnhancedTagger(object):
         test_gold_state = []
         if test_set:
             for i in range(len(test_set[0])):
-                test_gold_state.append(State(test_set[0][i],test_set[1][i],isGold=True))
+                test_gold_state.append(State(test_set[0][i],test_set[1][i],isGold=True,whole_s=test_set[2][i]))
         # dev_gold_state = []
         # if dev_set:
         #     for i in range(len(dev_set[0])):
@@ -806,7 +847,7 @@ class EnhancedTagger(object):
         n_error = 0
         golds = []
         for i in range(len(training_set[2])):
-            golds.append(State(training_set[0][i], training_set[1][i], True))
+            golds.append(State(training_set[0][i], training_set[1][i], True,whole_s=training_set[2][i]))
         old_time = time.time()
         for j in range(start_epoch,start_epoch+iterations):
             old_time = time.time()
@@ -971,6 +1012,7 @@ if __name__ == '__main__':
     parser.add_argument('--add',default=None)
     parser.add_argument('--new_feature',default='ri')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg data')
+    parser.add_argument('--use_pattern_feature',default=False)
     args = parser.parse_args()
 
     # f_add = open(args.record+'/error_record.txt','a',encoding='utf-8')
@@ -1029,7 +1071,7 @@ if __name__ == '__main__':
         # test = [test[0][0:400],test[1][0:400],test[2][0:400]]
         test_gold_state = []
         for i in range(len(test[0])):
-            test_gold_state.append(State(test[0][i],test[1][i],isGold=True))
+            test_gold_state.append(State(test[0][i],test[1][i],isGold=True,whole_s=test[2][i]))
 
         result = t1.test(test[2],test_gold_state)
         print('average:',result)

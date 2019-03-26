@@ -309,22 +309,22 @@ def PMI_n_2(word,word_freq,word_freq_sum):
 
 
 #以下为enhanced tagger新加的feature
-def isNoun2Tag2Len2(state,W):
-    return 'e1:'+str(int(state.word[-3] in W))+'_'+state.tag[-3]+'_'+str(len(state.word[-3]))
+def isNoun2Tag2Len2(state):
+    return 'e1:'+'_'+state.tag[-3]+'_'+str(len(state.word[-3]))
 
-def isNoun1Tag1Len1(state,W):
-    return 'e2:'+str(int(state.word[-2] in W))+'_'+state.tag[-2]+'_'+str(len(state.word[-2]))
+def isNoun1Tag1Len1(state):
+    return 'e2:'+'_'+state.tag[-2]+'_'+str(len(state.word[-2]))
 
-def isNoun0Tag0Len0(state,W):
-    return 'e3:'+str(int(state.word[-1] in W))+'_'+state.tag[-1]+'_'+str(len(state.word[-1]))
+def isNoun0Tag0Len0(state,w0_len):
+    return 'e3:'+'_'+state.tag[-1]+'_'+str(w0_len)
 
-def istrippleTag1Len1_1(state,istrippleSet,W):
-    istripple = str(int((state.word[-1] in W) and ((state.word[-3]+'_'+state.word[-1][0])in istrippleSet)))
-    return 'e4:'+ istripple + state.tag[-2]+'_'+str(len(state.word[-1]))
+def istrippleTag1Len1(state):
+    # istripple = str(int((state.word[-1] in W) and ((state.word[-3]+'_'+state.word[-1][0])in istrippleSet)))
+    return 'e4:' + state.tag[-2]+'_'+str(len(state.word[-2]))
 
-def ispatternTag1Len1(state,ispatternSet):
-    ispattern = str(int((state.word[-3] + '_' + state.word[-1][0]) in ispatternSet))
-    return 'e5:'+ ispattern + state.tag[-2]+'_'+str(len(state.word[-1]))
+def ispatternTag1Len1(state):
+    # ispattern = str(int((state.word[-3] + '_' + state.word[-1][0]) in ispatternSet))
+    return 'e5:' + state.tag[-2]+'_'+str(len(state.word[-2]))
 
 # def istrippleTag1Len1_2(state,istrippleSet,W):
 #     istripple = str(int((state.word[-1] in W) and ((state.word[-3]+'_'++state.word[-2]+'_'+state.word[-1][0])in istrippleSet)))
