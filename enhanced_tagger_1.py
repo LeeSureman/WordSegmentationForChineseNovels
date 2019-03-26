@@ -770,17 +770,19 @@ class EnhancedTagger(object):
             features.append(isNoun0Tag0Len0(state,now_w0_len))
 
 
-        tmp_is_tripple = False
+        # tmp_is_tripple = False
         tmp_is_pattern = False
         print('pattern')
         print(state.whole_s)
-        for i in range(1,5):
-            print(state.word[-1])
-            print(state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i])
-            if state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i] in self.P:
-                tmp_is_pattern = True
-                print('被选中为pattern')
-                break
+
+        if len(state.word)>1:
+            for i in range(1,5):
+                print(state.word[-1])
+                print(state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i])
+                if state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i] in self.P:
+                    tmp_is_pattern = True
+                    print('被选中为pattern')
+                    break
 
         if tmp_is_pattern:
             features.append(ispatternTag1Len1(state))
