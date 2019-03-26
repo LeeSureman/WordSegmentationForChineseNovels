@@ -276,15 +276,15 @@ class EnhancedTagger(object):
         for i in range(len(training_set[0])):
             states.append(State(training_set[0][i], training_set[1][i], True))
 
-        self.wc = WordClassifier(self.noun_tag)
-        self.wc.prepareKnowledge(states)
-        self.wc.prepareData(states)
-        self.pc = POSClassifier(self.wc.positive_candidate,self.wc.positive2tags,self.noun_tag)
-        self.pc.prepareData(states)
-        self.wc.train()
-        self.pc.train(21)
-        self.pc.weight.accumulateAll(21)
-        self.pc.weight.useAverage(21)
+        # self.wc = WordClassifier(self.noun_tag)
+        # self.wc.prepareKnowledge(states)
+        # self.wc.prepareData(states)
+        # self.pc = POSClassifier(self.wc.positive_candidate,self.wc.positive2tags,self.noun_tag)
+        # self.pc.prepareData(states)
+        # self.wc.train()
+        # self.pc.train(21)
+        # self.pc.weight.accumulateAll(21)
+        # self.pc.weight.useAverage(21)
 
         for i in range(len(states)):
             for j in range(2,len(states[i].word)-1):
