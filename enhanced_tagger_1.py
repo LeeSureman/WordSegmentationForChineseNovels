@@ -756,8 +756,9 @@ class EnhancedTagger(object):
         is_noun_candidate = False
         # tmp_s = state.word[-1]
         now_w0_len = 0
+        print('word')
+        print(state.whole_s)
         for i in range(1,5):
-            print('word')
             print(state.word[-1])
             print(state.whole_s[state.charLen-1:state.charLen-1+i])
             if state.whole_s[state.charLen-1:state.charLen-1+i] in self.W:
@@ -770,8 +771,9 @@ class EnhancedTagger(object):
 
         tmp_is_tripple = False
         tmp_is_pattern = False
+        print('pattern')
+        print(state.whole_s)
         for i in range(1,5):
-            print('pattern')
             print(state.word[-1])
             print(state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i])
             if state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i] in self.P:
