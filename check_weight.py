@@ -9,5 +9,5 @@ weight = pickle.load(open(args.weight_path,'rb'))
 print('load successfully')
 
 for name,value in weight.items():
-    if name[0] == 'e' and int(name[1])>3:
+    if name[:2]=='e5':
         print(name,value.now)
