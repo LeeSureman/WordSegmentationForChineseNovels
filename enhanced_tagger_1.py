@@ -1049,6 +1049,8 @@ if __name__ == '__main__':
         if args.init_weight:
             t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
 
+        print('use_pattern_feature:',args.use_pattern_feature)
+
         t1.train(train_p,args.start,args.epoch,test_set=test_p,args=args)
 
     elif args.mode =='test':
