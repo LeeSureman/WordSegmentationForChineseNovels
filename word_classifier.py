@@ -582,6 +582,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--output_tagged',help='the path of the tagged sentenced',default=None)
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
+    parser.add_argument('--mode','test or tag')
 
     args = parser.parse_args()
     w_c = WordClassifier(args.train,use_start_end_pmi=True,use_lisan=False,use_punc=True,
