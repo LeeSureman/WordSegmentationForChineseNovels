@@ -775,7 +775,7 @@ class EnhancedTagger(object):
         # print('pattern')
         # print(state.whole_s)
 
-        if args.use_pattern_feature and len(state.word)>1:
+        if self.args.use_pattern_feature and len(state.word)>1:
             for i in range(1,5):
                 # print(state.word[-1])
                 # print(state.word[-3]+'-'+state.whole_s[state.charLen-1:state.charLen-1+i])
