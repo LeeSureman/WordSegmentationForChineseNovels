@@ -276,7 +276,8 @@ class EnhancedTagger(object):
         for line in lines:
             line = line.strip()
             self.pku_dict.add(line.split('\t')[0])
-        # print(self.pku_dict)
+        print(self.pku_dict)
+        print('above is pku_dict')
         states = []
         for i in range(len(training_set[0])):
             states.append(State(training_set[0][i], training_set[1][i], True,whole_s=training_set[2][i]))
