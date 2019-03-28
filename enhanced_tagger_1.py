@@ -327,10 +327,10 @@ class EnhancedTagger(object):
 
 
         print(list(self.P)[:40])
-        print(len(self.P))
+        # print(len(self.P))
 
         print(list(self.W)[:40])
-        print(len(self.W))
+        # print(len(self.W))
 
 
 
