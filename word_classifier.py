@@ -765,6 +765,14 @@ if __name__ == '__main__':
         e_t.W = w_c.W
         e_t.P = w_c.P
 
+        ground_true_noun = set()
+        for i,words in enumerate(gold_wordss):
+            for j,w in enumerate(words):
+                if gold_tagss[i][j] in w_c.noun_tags:
+                    ground_true_noun.add(gold_wordss[i][j])
+
+        e_t.W = ground_true_noun
+
         novel_gold_state = []
         for i in range(len(novel_test[0])):
             novel_gold_state.append(State(novel_test[0][i], novel_test[1][i], isGold=True))
