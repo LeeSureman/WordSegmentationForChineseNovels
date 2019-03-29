@@ -1024,6 +1024,8 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default='ri')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg data')
     parser.add_argument('--use_pattern_feature',default=False)
+    parser.add_argument('--use_closed_set',default='0',help='whether to use penn closed set tag')
+    
     args = parser.parse_args()
 
     # f_add = open(args.record+'/error_record.txt','a',encoding='utf-8')
