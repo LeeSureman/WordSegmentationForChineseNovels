@@ -919,7 +919,7 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default=True,help='whether to include the feature new')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg the data')
     parser.add_argument('--output_tagged',default=None,help='the path to output auto-tagged when mode is tag')
-    parser.add_argument('--use_closed_set',default='0',help='whether use pruning of closed set tag')
+    parser.add_argument('--use_closed_set',default='0',help='whether use pruning of closed tag')
     args = parser.parse_args()
 
     t1 = BaseTagger(args)
@@ -934,6 +934,9 @@ if __name__ == '__main__':
             print(len(args.dataset_train))
             print(repr(args.dataset_train))
             exit(2)
+
+        if args.dataset_test =='novel':
+            test_p = loadNovelData(args.test)
 
         t1.prepareKnowledge(train_p)
         # print(t1.tag2index)
