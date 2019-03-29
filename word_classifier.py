@@ -13,8 +13,6 @@ from enhanced_tagger_1 import EnhancedTagger
 
 np.set_printoptions(suppress=True, threshold=np.nan)
 
-f = open(r'D:\迅雷下载\tmp2.txt','w',encoding='utf-8')
-
 
 
 def get_my_pmi(w,pair_freq,info):
@@ -45,8 +43,21 @@ class Info:
         self.char_freq_average = 0
 
 class WordClassifier:
-    def __init__(self, train_fp,limit=0.5,isGuiyi=False,use_my_feature=False,use_start_end_pmi=False,
+    def __init__(self, train_fp,limit=0.5,standarized=False,use_my_feature=False,use_start_end_pmi=False,
                  use_lisan=False,use_punc=False):
+        ''' train_fp:the path of the pku training set
+            limit: the threshold of the substring to be reffered as a new noun
+            standarized: whether to standarize the x
+            use_my_feature:whether to use the feature out of the paper,just set it False
+            use_start_end_pmi:the pmi of the start and end of the word, out of the paper,too.
+                                but is useful
+            use_lisan:whether to discretize the pattern count and freq.
+                    how ever, not like in the paper, my experiment shows not discretizing them is better
+
+            use_punc:whether to use them makes no difference
+
+
+        '''
         punctuations = '！？｡＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕'
         self.gen_set = set()
         self.punctuation = set()
@@ -57,7 +68,7 @@ class WordClassifier:
         self.use_start_end_pmi = use_start_end_pmi
         self.total_num = 0
         self.use_my_feature = use_my_feature
-        self.isGuiyi=isGuiyi
+        self.standarized=standarized
         self.limit = limit
         self.l = 15
         self.train_fp = train_fp
@@ -66,11 +77,10 @@ class WordClassifier:
         self.negative_x = {}
         self.word2freq_dict = {}
         self.word2freq_list = {}
-        self.char_freq = {}
-        self.pair_freq = {}
+        self.char_freq = {}             #the freq of a char occuring in a word
+        self.pair_freq = {}             #the freq of two chars(even unconsecutive) occuring in a word,
         self.P = dict()
         self.l_r = LR(tol=0.1,solver='sag',C=1)
-        # self.l_r = LR(tol=0.0001,solver='newton-cg',C=1)
 
         self.s_s = StandardScaler()
         self.w_candidate_info = dict()
@@ -95,6 +105,10 @@ class WordClassifier:
             return 0
 
     def prepare_training_data_and_train(self):
+        ''' prepare training data and
+            train
+
+        '''
         segmenteds, tags, sentences = loadQiuPKU(self.train_fp, -2)
         # self.wordss = segmenteds
         # self.tagss = tags
@@ -165,7 +179,7 @@ class WordClassifier:
                     if e_w and s_w:
                         tmp_info.starts_ends_punc += 1
 
-
+        #prepare the negative examples
         for i, words in enumerate(segmenteds):
             for j, w in enumerate(words):
                 if w in self.positive_x:
@@ -236,6 +250,8 @@ class WordClassifier:
                     else:
                         self.pair_freq[w[i] + w[j]] += 1
 
+        #the following is to make pair_freq symmetric
+
         new_pair_freq = dict()
         hasAdd = set()
         for w,freq in self.pair_freq.items():
@@ -251,6 +267,7 @@ class WordClassifier:
             hasAdd.add(w[0]+w[1])
             hasAdd.add(w[1]+w[0])
 
+
         print('old_pair_freq:',len(self.pair_freq))
         self.pair_freq = new_pair_freq
         print('new_pair_freq:',len(self.pair_freq))
@@ -262,17 +279,6 @@ class WordClassifier:
                 else:
                     self.char_freq[c] = 1
 
-        # for w,x in self.positive_x.items():
-        #     for p in x.pattern_set:
-        #         if '-' not in p:
-        #             print(p)
-        #
-        # for w,x in self.negative_x.items():
-        #     for p in x.pattern_set:
-        #         if '-' not in p:
-        #             print(p)
-        # print(len(self.positive_x))
-        # print(len(self.negative_x))
         N_positive = len(self.positive_x)
         N_negative = len(self.negative_x)
         x_np_positive = np.zeros(shape=[N_positive,self.l])
@@ -282,8 +288,6 @@ class WordClassifier:
 
         for i,(w,info) in enumerate(self.positive_x.items()):
             y_np_positive[i][0] = 1
-            # x_np_positive[i][0] = len(info.pattern_set)
-            # x_np_positive[i][1] = len(info.pattern_list)
             if self.use_lisan:
                 if len(info.pattern_set)==1:
                     x_np_positive[i][0] = 1
@@ -306,16 +310,7 @@ class WordClassifier:
                 x_np_positive[i][0] = len(info.pattern_set)
                 x_np_positive[i][1] = len(info.pattern_list)
 
-            # for c in w:
-            #     info.char_freq_average+=self.char_freq.setdefault(c,0)
-            # info.char_freq_average/=len(w)
-            # x_np_positive[i][8] = get_char_freq(w,self.char_freq,info)
-            # if len(w)>1:
-            #     for i in range(len(w)):
-            #         for j in range(i+1,len(w)):
-            #             info.my_pmi+=self.pair_freq.setdefault(w[i]+w[j],0)
-            #
-            #     info.my_pmi/=(len(w)*(len(w)-1))
+
             if self.use_my_feature:
                 x_np_positive[i][8] = get_char_freq(w, self.char_freq, info)
                 x_np_positive[i][9] = get_my_pmi(w,self.pair_freq,info)
@@ -327,8 +322,7 @@ class WordClassifier:
 
         for i, (w, info) in enumerate(self.negative_x.items()):
             y_np_negative[i][0] = 0
-            # x_np_negative[i][0] = len(info.pattern_set)
-            # x_np_negative[i][1] = len(info.pattern_list)
+
             if self.use_lisan:
                 if len(info.pattern_set) == 1:
                     x_np_negative[i][0] = 1
@@ -351,11 +345,6 @@ class WordClassifier:
                 x_np_negative[i][0] = len(info.pattern_set)
                 x_np_negative[i][1] = len(info.pattern_list)
 
-
-            # for c in w:
-            #     info.char_freq_average += self.char_freq.setdefault(c, 0)
-            # info.char_freq_average /= len(w)
-            # x_np_negative[i][8] = info.char_freq_average
 
             if self.use_my_feature:
                 x_np_negative[i][8] = get_char_freq(w,self.char_freq,info)
@@ -385,7 +374,7 @@ class WordClassifier:
 
         self.x_np_train,self.x_np_test,self.y_np_train,self.y_np_test = \
         train_test_split(self.x_np,self.y_np,test_size=0.01,random_state=1208)
-        if self.isGuiyi:
+        if self.standarized:
             self.x_np_train = self.s_s.fit_transform(self.x_np_train)
             self.x_np_test = self.s_s.transform(self.x_np_test)
         # self.x_np_train = np.concatenate([np.tile(x_np_positive,[22,1]),self.x_np_train],axis=0)
@@ -425,14 +414,14 @@ class WordClassifier:
         print('f1:',2*p*r/(p+r))
         print('acc:',(tp+tn)/(tp+fp+tn+fn))
 
-        # p = precision_score(self.y_np_test,predict>0.5,average='binary')
-        # r = recall_score(self.y_np_test,predict>0.5,average='binary')
-        # f = f1_score(self.y_np_test,predict>0.5,average='binary')
-        # print(p,r,f)
 
         print(tmp)
 
     def predict_a_word(self,w):
+        ''' input:a word:str
+            output:whether it is recoginized as a word
+            True or False
+        '''
         info = self.w_candidate_info[w]
         x = np.zeros([1,self.l])
         if self.use_lisan:
@@ -458,10 +447,6 @@ class WordClassifier:
             x[0][0] = len(info.pattern_set)
             x[0][1] = len(info.pattern_list)
 
-        # for c in w:
-        #     info.char_freq_average += self.char_freq.setdefault(c, 0)
-        # info.char_freq_average /= len(w)
-        # x_np_negative[i][8] = info.char_freq_average
         if self.use_my_feature:
             x[0][8] = get_char_freq(w, self.char_freq, info)
             x[0][9] = get_my_pmi(w, self.pair_freq, info)
@@ -484,6 +469,10 @@ class WordClassifier:
         # print(classification_report(, lr_y_predict, target_names=['Benign', 'Maligant'])
 
     def get_feature_prob(self,w,info_dict):
+        ''' input:a word:str
+            output:its features and the prob it is recgnized as a word
+        '''
+
         info = info_dict[w]
         x = np.zeros([1,self.l])
         if self.use_lisan:
@@ -508,10 +497,6 @@ class WordClassifier:
             x[0][0] = len(info.pattern_set)
             x[0][1] = len(info.pattern_list)
 
-        # for c in w:
-        #     info.char_freq_average += self.char_freq.setdefault(c, 0)
-        # info.char_freq_average /= len(w)
-        # x_np_negative[i][8] = info.char_freq_average
 
         if self.use_my_feature:
             x[0][8] = get_char_freq(w, self.char_freq, info)
@@ -531,6 +516,7 @@ class WordClassifier:
 
 
 def on_new_pattern(pattern,info_dict,wordss):
+    '''the function is called when the new pattern is found'''
     for i, words in enumerate(wordss):
         for j, w in enumerate(words):
             if w in info_dict:
@@ -542,6 +528,7 @@ def on_new_pattern(pattern,info_dict,wordss):
                     info_dict[w].pattern_list.append(now_pattern)
 
 def get_all_pattern(target,wordss):
+    '''return the targets's all pattern'''
     w_patterns = set()
     for i,words in enumerate(wordss):
         for j, w in enumerate(words):
@@ -552,25 +539,27 @@ def get_all_pattern(target,wordss):
 
     return w_patterns
 
-def has_no_punc(w,puncs):
+def has_no_punc(w,puncs=set()):
     for c in w:
-        if not ((c>='\u4e00' and c<='\u9fff') or (c<='z' and c>='a')):
+        if c in puncs:
             return False
+        # if not ((c>='\u4e00' and c<='\u9fff') or (c<='z' and c>='a')):
+        #     return False
 
     return True
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\199801.segged_known.txt')
-    parser.add_argument('--auto_tagged',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\zx_auto.txt')
+    parser.add_argument('--train',help='the path of the training set')
+    parser.add_argument('--auto_tagged',help='the path of the auto tagged novel')
     # parser.add_argument('--pku_dict',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\qiu_dict.txt')
-    parser.add_argument('--gold',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\novel\zx_300_dev.txt')
+    parser.add_argument('--gold',help='the path of the gold novel')
     # parser.add_argument('--auto_tagged',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\novel\zx_300_dev.txt')
-    parser.add_argument('--data_seed',default=-1,help='how to seg data train/test')
+    parser.add_argument('--data_seed',default=-1,help='how to shuffle data train/test,if -1 the last 1500 sentences are in test set')
 
     parser.add_argument('--test', default=None, help='if mode is test,it is annotated,if mode is tag,it is raw')
-    parser.add_argument('--base_weight',required=True,default=None,help='base weight')
-    parser.add_argument('--enhanced_weight',required=True,help='enhanced weight')
+    parser.add_argument('--base_weight',required=True,default=None,help='base tanggerweight')
+    parser.add_argument('--enhanced_weight',required=True,help='enhanced tagger weight')
     parser.add_argument('--dataset_test',help='ctb or pku or novel')
     # parser.add_argument('--mode',help='train or test')
     parser.add_argument('--pku_dict',help='the common word in pku dict',required=True)
@@ -584,18 +573,13 @@ if __name__ == '__main__':
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
     parser.add_argument('--mode',help='test or tag')
 
+
+
     args = parser.parse_args()
     w_c = WordClassifier(args.train,use_start_end_pmi=True,use_lisan=False,use_punc=True,
                          limit=0.5)
     w_c.prepare_training_data_and_train()
-    # dict_set = set()
-    # f_dict = open(args.pku_dict,'r',encoding='utf-8')
-    # dict_lines = f_dict.readlines()
-    # for line in dict_lines:
-    #     line_split = line.strip().split('\t')
-    #     dict_set.add(line_split[0])
-    # print(list(dict_set)[:10])
-    # print(len(dict_set))
+
     wordss,tagss,sentences = loadNovelData(args.auto_tagged)
     gold_wordss,gold_tagss,gold_sentences = loadNovelData(args.gold)
     for words in wordss:
@@ -605,6 +589,7 @@ if __name__ == '__main__':
                 get_char_freq(w,w_c.char_freq,w_c.w_candidate_info[w])
                 get_my_pmi(w,w_c.char_freq,w_c.w_candidate_info[w])
 
+    #the following is constructing novel word features
     for i,words in enumerate(wordss):
         for j,w in enumerate(words):
             if w in w_c.w_candidate_info:
@@ -655,11 +640,14 @@ if __name__ == '__main__':
                 print(w,'被识别为新的名词',w_c.get_feature_prob(w,tmp_candidate_info))
                 print(tmp_candidate_info[w].pattern_set)
                 print(tmp_candidate_info[w].pattern_list)
+
                 w_patterns = get_all_pattern(w,wordss)
+
                 for p in w_patterns:
                     if p not in w_c.P:
                         w_c.P[p] = 1
                         print(w,'有',p,'这个pattern，所以：')
+
                         on_new_pattern(p,tmp_candidate_info,wordss)
 
         if len(w_c.w_candidate_info) == old_size:
