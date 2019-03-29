@@ -259,7 +259,10 @@ class EnhancedTagger(object):
         # self.PENN_TAG_CLOSED = set()
         if args:
             if args.dataset_train == 'pku':
-                self.PENN_TAG_CLOSED = {'p','c','f','r','uv','y','w'}
+                if self.args.use_closed_set=='1':
+                    self.PENN_TAG_CLOSED = {'p', 'c', 'f', 'r', 'uv', 'y', 'w'}
+                else:
+                    self.PENN_TAG_CLOSED = set()
                 self.noun_tag = {'n', 'nz', 'ns', 'nr', 'nt'}
             elif args.dataset_train == 'ctb':
                 self.PENN_TAG_CLOSED = {'p','dec','deg','c','lc','pn','dt','vc','as','ve','etc','msp','cs','ba','dev','sb','sp','lb','der','pu'}
