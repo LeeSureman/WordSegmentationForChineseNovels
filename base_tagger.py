@@ -919,6 +919,7 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default=True,help='whether to include the feature new')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg the data')
     parser.add_argument('--output_tagged',default=None,help='the path to output auto-tagged when mode is tag')
+    parser.add_argument('--use_closed_set',default='0',help='whether use pruning of closed set tag')
     args = parser.parse_args()
 
     t1 = BaseTagger(args)
