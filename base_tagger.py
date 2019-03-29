@@ -938,6 +938,8 @@ if __name__ == '__main__':
         if args.dataset_test =='novel':
             test_p = loadNovelData(args.test)
 
+        print(test_p[2][0])
+
         t1.prepareKnowledge(train_p)
         # print(t1.tag2index)
         if args.init_weight:
