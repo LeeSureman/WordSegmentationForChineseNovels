@@ -257,6 +257,10 @@ class BaseTagger(object):
         # self.PENN_TAG_CLOSED = set()
         if args:
             if args.dataset_train == 'pku':
+                if args.use_closed_set == '1':
+                    self.PENN_TAG_CLOSED = {'p', 'c', 'f', 'r', 'y', 'w'}
+                else:
+                    self.PENN_TAG_CLOSED = set()
                 # self.PENN_TAG_CLOSED = {'p','c','f','r','y','w'}
                 self.PENN_TAG_CLOSED = set()
             elif args.dataset_train == 'ctb':
