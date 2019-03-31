@@ -551,19 +551,19 @@ def has_no_punc(w,puncs=set()):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train',help='the path of the training set')
-    parser.add_argument('--auto_tagged',default=None,help='the path of the auto tagged novel')
+    parser.add_argument('--train',help='the path of the training set',default='data/199801.segged_known.txt')
+    parser.add_argument('--auto_tagged',default='data/zx_auto.txt',help='the path of the auto tagged novel')
     # parser.add_argument('--pku_dict',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\qiu_dict.txt')
-    parser.add_argument('--gold',help='the path of the gold novel')
+    parser.add_argument('--gold',help='the path of the gold novel',default='data/novel/zx_300_dev.txt')
     # parser.add_argument('--auto_tagged',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\novel\zx_300_dev.txt')
     parser.add_argument('--data_seed',type=int,default=-1,help='how to shuffle data train/test,if -1 the last 1500 sentences are in test set')
 
-    parser.add_argument('--test', default=None, help='if mode is test,it is annotated,if mode is tag,it is raw')
-    parser.add_argument('--base_weight',required=True,default=None,help='base tanggerweight')
-    parser.add_argument('--enhanced_weight',required=True,help='enhanced tagger weight')
+    parser.add_argument('--test', default='data/novel/zx_300_dev.txt', help='if mode is test,it is annotated,if mode is tag,it is raw')
+    parser.add_argument('--base_weight',default=None,help='base tanggerweight')
+    parser.add_argument('--enhanced_weight',default=None,help='enhanced tagger weight')
     parser.add_argument('--dataset_test',help='ctb or pku or novel')
     # parser.add_argument('--mode',help='train or test')
-    parser.add_argument('--pku_dict',help='the common word in pku dict',required=True)
+    parser.add_argument('--pku_dict',default='data/qiu_dict.txt',help='the common word in pku dict')
     parser.add_argument('--add',default='')
     parser.add_argument('--dataset_train', help='ctb or pku')
     parser.add_argument('--new_feature',default='1')
@@ -584,9 +584,9 @@ if __name__ == '__main__':
                          limit=0.5)
     w_c.prepare_training_data_and_train()
     train, test = loadQiuPKU(args.train, args.data_seed)
-    b_t = BaseTagger(args)
-    b_t.prepareKnowledge(train)
-    b_t.weight.weightDict = pickle.load(open(args.base_weight, 'rb'))
+    # b_t = BaseTagger(args)
+    # b_t.prepareKnowledge(train)
+    # b_t.weight.weightDict = pickle.load(open(args.base_weight, 'rb'))
 
 
 
@@ -602,12 +602,12 @@ if __name__ == '__main__':
     #     tmp_state = b_t.tag(s,False,b_t.judge_by_rule(s))
     #     wordss.append(tmp_state.word[2:-1])
     #     tagss.append(tmp_state.tag[2:-1])
-    # for words in wordss:
-    #     for w in words:
-    #         if w not in w_c.gen_set and w not in w_c.w_candidate_info:
-    #             w_c.w_candidate_info[w] = Info()
-    #             get_char_freq(w,w_c.char_freq,w_c.w_candidate_info[w])
-    #             get_my_pmi(w,w_c.char_freq,w_c.w_candidate_info[w])
+    for words in wordss:
+        for w in words:
+            if w not in w_c.gen_set and w not in w_c.w_candidate_info:
+                w_c.w_candidate_info[w] = Info()
+                get_char_freq(w,w_c.char_freq,w_c.w_candidate_info[w])
+                get_my_pmi(w,w_c.char_freq,w_c.w_candidate_info[w])
 
     #the following is constructing novel word features
     for i,words in enumerate(wordss):
@@ -811,11 +811,11 @@ if __name__ == '__main__':
             novel_gold_state.append(State(novel_test[0][i], novel_test[1][i], isGold=True))
 
 
-        b_result = b_t.test(novel_test[2],novel_gold_state)
+        # b_result = b_t.test(novel_test[2],novel_gold_state)
 
         e_result = e_t.test(novel_test[2],novel_gold_state)
 
-        print('base tagger:',b_result)
+        # print('base tagger:',b_result)
         print('\nenhanced tagger:',e_result)
 
         # print('w:',e_t.wc.lr.w)
@@ -841,8 +841,8 @@ if __name__ == '__main__':
         # novel_test = loadNovelData(args.test)
 
 
-        b_t.prepareKnowledge(train)
-        b_t.weight.weightDict = pickle.load(open(args.base_weight,'rb'))
+        # b_t.prepareKnowledge(train)
+        # b_t.weight.weightDict = pickle.load(open(args.base_weight,'rb'))
 
 
 
