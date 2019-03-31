@@ -744,7 +744,7 @@ if __name__ == '__main__':
 
             for i,words in enumerate(gold_wordss):
                 for j,w_ in enumerate(words):
-                    if w==w_:
+                    if w==w_ and gold_tagss[i][j] in w_c.noun_tags:
                         w2pos[w][gold_tagss[i][j]] = 1+w2pos[w].setdefault(gold_tagss[i][j],0)
 
             wp2freq = list(w2pos[w].items())
