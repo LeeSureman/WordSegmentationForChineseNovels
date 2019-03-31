@@ -573,6 +573,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_tagged',help='the path of the tagged sentenced',default=None)
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
     parser.add_argument('--mode',help='test or tag')
+    parser.add_argument('--use_true_info',default=False,type=bool,help='whether to use ground truth noun and pattern')
 
 
 
@@ -587,24 +588,24 @@ if __name__ == '__main__':
 
 
 
-    # wordss,tagss,sentences = loadNovelData(args.auto_tagged)
+    wordss,tagss,sentences = loadNovelData(args.auto_tagged)
 
     gold_wordss,gold_tagss,gold_sentences = loadNovelData(args.gold)
 
-    states = []
-    wordss = []
-    tagss = []
-    sentences = gold_sentences
-    for s in gold_sentences:
-        tmp_state = b_t.tag(s,False,b_t.judge_by_rule(s))
-        wordss.append(tmp_state.word[2:-1])
-        tagss.append(tmp_state.tag[2:-1])
-    for words in wordss:
-        for w in words:
-            if w not in w_c.gen_set and w not in w_c.w_candidate_info:
-                w_c.w_candidate_info[w] = Info()
-                get_char_freq(w,w_c.char_freq,w_c.w_candidate_info[w])
-                get_my_pmi(w,w_c.char_freq,w_c.w_candidate_info[w])
+    # states = []
+    # wordss = []
+    # tagss = []
+    # sentences = gold_sentences
+    # for s in gold_sentences:
+    #     tmp_state = b_t.tag(s,False,b_t.judge_by_rule(s))
+    #     wordss.append(tmp_state.word[2:-1])
+    #     tagss.append(tmp_state.tag[2:-1])
+    # for words in wordss:
+    #     for w in words:
+    #         if w not in w_c.gen_set and w not in w_c.w_candidate_info:
+    #             w_c.w_candidate_info[w] = Info()
+    #             get_char_freq(w,w_c.char_freq,w_c.w_candidate_info[w])
+    #             get_my_pmi(w,w_c.char_freq,w_c.w_candidate_info[w])
 
     #the following is constructing novel word features
     for i,words in enumerate(wordss):
@@ -839,12 +840,21 @@ if __name__ == '__main__':
         e_t.P = w_c.P
 
         ground_true_noun = set()
+        ground_true_pattern = set()
         for i,words in enumerate(gold_wordss):
             for j,w in enumerate(words):
                 if gold_tagss[i][j] in w_c.noun_tags:
                     ground_true_noun.add(gold_wordss[i][j])
+                    if j==0 and len(gold_wordss)>2:
+                        ground_true_pattern.add(' '+'-'+words[j+1])
+                    elif j< len(gold_wordss)-1:
+                        ground_true_pattern.add(words[j-1]+'-'+words[j+1])
+                    else:
+                        ground_true_pattern.add(words[j-1]+'-'+' ')
 
-        # e_t.W = ground_true_noun
+        if args.use_true_info:
+            e_t.P = ground_true_pattern
+            e_t.W = ground_true_noun
 
         novel_gold_state = []
         for i in range(len(novel_test[0])):
