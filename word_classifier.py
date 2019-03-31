@@ -752,7 +752,7 @@ if __name__ == '__main__':
             if len(wp2freq)>0:
                 result_dict[wp2freq[0]].add(w)
             else:
-                result_dict[list(w_c.noun_tags)[random.randint(0,255)]].add(w)
+                result_dict[list(w_c.noun_tags)[random.randint(0,255)%5]].add(w)
 
         for p in result_dict:
             f_ = open(dic_name+'/'+p,'w',encoding='utf-8')
