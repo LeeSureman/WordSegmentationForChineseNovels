@@ -672,7 +672,7 @@ if __name__ == '__main__':
 
 
 
-    print(w_c.W)
+    # print(w_c.W)
 
     all_new_noun = set()
 
@@ -681,7 +681,7 @@ if __name__ == '__main__':
             if w not in w_c.gen_set and gold_tagss[i][j] in w_c.noun_tags:
             # if w not in w_c.gen_set:
                 all_new_noun.add(w)
-    print(all_new_noun)
+    # print(all_new_noun)
     true_w = all_new_noun.intersection(w_c.W)
 
     precision = len(true_w)/len(w_c.W)
@@ -772,7 +772,7 @@ if __name__ == '__main__':
                 if gold_tagss[i][j] in w_c.noun_tags:
                     ground_true_noun.add(gold_wordss[i][j])
 
-        # e_t.W = ground_true_noun
+        e_t.W = ground_true_noun
 
         novel_gold_state = []
         for i in range(len(novel_test[0])):
