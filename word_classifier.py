@@ -355,13 +355,13 @@ class WordClassifier:
 
             if self.use_punc:
                 x_np_negative[i][11] = int(info.starts_ends_punc>=2)
-        for w, info in self.positive_x.items():
-            print(w, '\t', 'count:', len(info.pattern_set), 'freq:', len(info.pattern_list),
-                  'char_freq:', info.char_freq_average, 'my_pmi:', info.my_pmi, '\t', info.pattern_set, file=f)
-
-        for w, info in self.negative_x.items():
-            print(w, '\t', 'count:', len(info.pattern_set), 'freq:', len(info.pattern_list),
-                  'char_freq:', info.char_freq_average, 'my_pmi:', info.my_pmi, '\t', info.pattern_set, file=f)
+        # for w, info in self.positive_x.items():
+        #     print(w, '\t', 'count:', len(info.pattern_set), 'freq:', len(info.pattern_list),
+        #           'char_freq:', info.char_freq_average, 'my_pmi:', info.my_pmi, '\t', info.pattern_set, file=f)
+        #
+        # for w, info in self.negative_x.items():
+        #     print(w, '\t', 'count:', len(info.pattern_set), 'freq:', len(info.pattern_list),
+        #           'char_freq:', info.char_freq_average, 'my_pmi:', info.my_pmi, '\t', info.pattern_set, file=f)
 
         # self.x_np = np.concatenate([x_np_positive,x_np_negative],axis=0)
         # self.y_np = np.concatenate([y_np_positive,y_np_negative],axis=0)
