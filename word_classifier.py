@@ -508,7 +508,7 @@ class WordClassifier:
             x[0][11] = int(info.starts_ends_punc>=2)
 
 
-        if self.isGuiyi:
+        if self.standarized:
             x = self.s_s.transform(x)
         p = self.l_r.predict_proba(x)
 
