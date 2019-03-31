@@ -10,6 +10,7 @@ from data_preprocess import *
 import copy
 import math
 from enhanced_tagger_1 import EnhancedTagger
+import random
 
 np.set_printoptions(suppress=True, threshold=np.nan)
 
@@ -748,7 +749,10 @@ if __name__ == '__main__':
 
             wp2freq = list(w2pos[w].items())
             wp2freq.sort(key = lambda x:x[1],reverse=True)
-            result_dict[wp2freq[0]].add(w)
+            if len(wp2freq)>0:
+                result_dict[wp2freq[0]].add(w)
+            else:
+                result_dict[list(w_c.noun_tags)[random.randint(0,255)]].add(w)
 
         for p in result_dict:
             f_ = open(dic_name+'/'+p,'w',encoding='utf-8')
