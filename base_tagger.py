@@ -927,7 +927,10 @@ if __name__ == '__main__':
 
     if args.mode =='train':
         if args.dataset_train == 'pku':
-            train_p,test_p = loadQiuPKU(args.train,args.data_seed)
+            if args.dataset_test=='novel':
+                train_p = loadQiuPKU(args.train, -2)
+            else:
+                train_p,test_p = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train_p,dev_p,test_p = loadCTB3Data(args.train)
         else:
@@ -939,6 +942,7 @@ if __name__ == '__main__':
         if args.dataset_test =='novel':
             test_p = loadNovelData(args.test)
 
+        print('train:',len(train_p[2]))
         print(test_p[2][0])
 
         t1.prepareKnowledge(train_p)
