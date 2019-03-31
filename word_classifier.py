@@ -580,7 +580,7 @@ if __name__ == '__main__':
     w_c = WordClassifier(args.train,use_start_end_pmi=True,use_lisan=False,use_punc=True,
                          limit=0.5)
     w_c.prepare_training_data_and_train()
-
+    train, test = loadQiuPKU(args.train, args.data_seed)
     b_t = BaseTagger(args)
     b_t.prepareKnowledge(train)
     b_t.weight.weightDict = pickle.load(open(args.base_weight, 'rb'))
