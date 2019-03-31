@@ -258,7 +258,8 @@ class BaseTagger(object):
         if args:
             if args.dataset_train == 'pku':
                 if args.use_closed_set == '1':
-                    self.PENN_TAG_CLOSED = {'p', 'c', 'f', 'r', 'y', 'w'}
+                    self.PENN_TAG_CLOSED = {'w','u','p','c','f','r','q','y','e','o','l','i','k','h'}
+
                 else:
                     self.PENN_TAG_CLOSED = set()
                 # self.PENN_TAG_CLOSED = {'p','c','f','r','y','w'}
@@ -919,7 +920,7 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default=True,help='whether to include the feature new')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg the data')
     parser.add_argument('--output_tagged',default=None,help='the path to output auto-tagged when mode is tag')
-    parser.add_argument('--use_closed_set',default='0',help='whether use pruning of closed tag')
+    parser.add_argument('--use_closed_set',default='1',help='whether use pruning of closed tag')
     args = parser.parse_args()
 
     t1 = BaseTagger(args)

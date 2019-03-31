@@ -260,7 +260,8 @@ class EnhancedTagger(object):
         if args:
             if args.dataset_train == 'pku':
                 if self.args.use_closed_set=='1':
-                    self.PENN_TAG_CLOSED = {'p', 'c', 'f', 'r', 'uv', 'y', 'w'}
+                    # self.PENN_TAG_CLOSED = {'p', 'c', 'f', 'r', 'uv', 'y', 'w'}
+                    self.PENN_TAG_CLOSED = {'w','u','p','c','f','r','q','y','e','o','l','i','k','h'}
                 else:
                     self.PENN_TAG_CLOSED = set()
                 self.noun_tag = {'n', 'nz', 'ns', 'nr', 'nt'}
@@ -1024,8 +1025,8 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default='ri')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg data')
     parser.add_argument('--use_pattern_feature',default=False)
-    parser.add_argument('--use_closed_set',default='0',help='whether to use penn closed set tag')
-    
+    parser.add_argument('--use_closed_set',default='1',help='whether to use penn closed set tag')
+
     args = parser.parse_args()
 
     # f_add = open(args.record+'/error_record.txt','a',encoding='utf-8')
@@ -1050,6 +1051,9 @@ if __name__ == '__main__':
             print(len(args.dataset_train))
             print(repr(args.dataset_train))
             exit(2)
+
+        if args.dataset_test=='novel':
+            test_p = loadNovelData(args.test)
 
         t1.prepareKnowledge(train_p)
         if args.init_weight:
