@@ -555,7 +555,7 @@ if __name__ == '__main__':
     # parser.add_argument('--pku_dict',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\qiu_dict.txt')
     parser.add_argument('--gold',help='the path of the gold novel')
     # parser.add_argument('--auto_tagged',default=r'D:\PycharmProjects\WordSegmentationForChineseNovels\data\novel\zx_300_dev.txt')
-    parser.add_argument('--data_seed',default=-1,help='how to shuffle data train/test,if -1 the last 1500 sentences are in test set')
+    parser.add_argument('--data_seed',type=int,default=-1,help='how to shuffle data train/test,if -1 the last 1500 sentences are in test set')
 
     parser.add_argument('--test', default=None, help='if mode is test,it is annotated,if mode is tag,it is raw')
     parser.add_argument('--base_weight',required=True,default=None,help='base tanggerweight')
