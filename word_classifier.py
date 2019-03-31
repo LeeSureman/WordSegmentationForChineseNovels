@@ -750,7 +750,7 @@ if __name__ == '__main__':
             wp2freq = list(w2pos[w].items())
             wp2freq.sort(key = lambda x:x[1],reverse=True)
             if len(wp2freq)>0:
-                result_dict[wp2freq[0]].add(w)
+                result_dict[wp2freq[0][0]].add(w)
             else:
                 result_dict[list(w_c.noun_tags)[random.randint(0,255)%5]].add(w)
 
