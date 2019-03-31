@@ -742,8 +742,9 @@ if __name__ == '__main__':
             w2pos[w] = dict()
 
             for i,words in enumerate(gold_wordss):
-                for j,w in enumerate(words):
-                    w2pos[w][gold_tagss[i][j]] = 1+w2pos[w].setdefault(gold_tagss[i][j],0)
+                for j,w_ in enumerate(words):
+                    if w==w_:
+                        w2pos[w][gold_tagss[i][j]] = 1+w2pos[w].setdefault(gold_tagss[i][j],0)
 
             wp2freq = list(w2pos[w].items())
             wp2freq.sort(key = lambda x:x[1],reverse=True)
