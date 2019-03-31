@@ -746,7 +746,7 @@ if __name__ == '__main__':
                     w2pos[w][gold_tagss[i][j]] = 1+w2pos[w].setdefault(gold_tagss[i][j],0)
 
             wp2freq = list(w2pos[w].items())
-            wp2freq.sort(lambda x:x[1],reverse=True)
+            wp2freq.sort(key = lambda x:x[1],reverse=True)
             result_dict[wp2freq[0]].add(w)
 
         for p in result_dict:
