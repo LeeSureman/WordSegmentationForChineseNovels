@@ -257,6 +257,11 @@ class EnhancedTagger(object):
         # self.PENN_TAG_CLOSED = {'P','DEC','DEG','CC','LC','PN','DT','VC','AS','VE','ETC','MSP','CS','BA','DEV','SB','SP','LB','DER','PU'}
         # self.PEOPLE_TAG_CLOSED = {'p',}
         # self.PENN_TAG_CLOSED = set()
+
+        self.train_w = set()
+        self.train_p = set()
+        self.test_w = set()
+        self.test_p = set()
         if args:
             if args.dataset_train == 'pku':
                 if self.args.use_closed_set=='1':
@@ -330,6 +335,24 @@ class EnhancedTagger(object):
             print('W里有空格，已去除')
             self.W.remove(' ')
 
+        self.train_p = self.P
+        self.train_w = self.W
+
+        if args.dataset_test == 'novel':
+            w_f = open(args.test_w,'r',encoding='utf-8')
+            lines = w_f.readlines()
+            for line in lines:
+                line = line.strip()
+                self.test_w.add(line)
+
+            p_f = open(args.test_p,'r',encoding='utf-8')
+            lines = p_f.readlines()
+            for line in lines:
+                line = line.strip()
+                self.test_p.add(line)
+
+        self.test_p = self.test_p.union(self.P)
+        self.test_w = self.test_w.union(self.W)
 
         print(list(self.P)[:40])
         # print(len(self.P))
@@ -709,6 +732,12 @@ class EnhancedTagger(object):
 
     def getOrUpdateSeparateScore(self, state,isTrain,amount=0,i_round=0):
         # print(state.word[-1])
+        if isTrain:
+            self.W = self.train_w
+            self.P = self.train_p
+        else:
+            self.W = self.test_w
+            self.P = self.test_p
         assert len(state.word[-1]) == 1
         features = []
         features.append(seenWord(state))
@@ -1026,6 +1055,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg data')
     parser.add_argument('--use_pattern_feature',default=False)
     parser.add_argument('--use_closed_set',default='1',help='whether to use penn closed set tag')
+    parser.add_argument('--test_w',default=None,help='the novel W file')
+    parser.add_argument('--test_p',default=None,help='the novel P file')
 
     args = parser.parse_args()
 

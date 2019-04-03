@@ -575,7 +575,7 @@ if __name__ == '__main__':
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
     parser.add_argument('--mode',help='test or tag')
     parser.add_argument('--use_true_info',default=False,type=bool,help='whether to use ground truth noun and pattern')
-    parser.add_argument('--just_for_w',default=False)
+    parser.add_argument('--just_for_w',default='1')
 
 
 
@@ -732,27 +732,34 @@ if __name__ == '__main__':
     print(w2freq)
 
     if args.just_for_w=='1':
-        dic_name = 'tmp_noun'
-        if not os.path.exists(dic_name):
-            os.makedirs(dic_name)
-        w2pos = dict()
-        result_dict = dict()
-        for p in w_c.noun_tags:
-            result_dict[p] = set()
+        w_fp = open('data/noun_pattern/w_zx_dev_unfull','w',encoding='utf-8')
+        p_fp = open('data/noun_pattern/p_zx_dev_unfull','w',encoding='utf-8')
         for w in w_c.W:
-            w2pos[w] = dict()
+            print(w,file=w_fp)
 
-            for i,words in enumerate(gold_wordss):
-                for j,w_ in enumerate(words):
-                    if w==w_ and gold_tagss[i][j] in w_c.noun_tags:
-                        w2pos[w][gold_tagss[i][j]] = 1+w2pos[w].setdefault(gold_tagss[i][j],0)
-
-            wp2freq = list(w2pos[w].items())
-            wp2freq.sort(key = lambda x:x[1],reverse=True)
-            if len(wp2freq)>0:
-                result_dict[wp2freq[0][0]].add(w)
-            else:
-                result_dict[list(w_c.noun_tags)[random.randint(0,255)%5]].add(w)
+        for p in w_c.P:
+            print(p,file=p_fp)
+        # dic_name = 'tmp_noun'
+        # if not os.path.exists(dic_name):
+        #     os.makedirs(dic_name)
+        # w2pos = dict()
+        # result_dict = dict()
+        # for p in w_c.noun_tags:
+        #     result_dict[p] = set()
+        # for w in w_c.W:
+        #     w2pos[w] = dict()
+        #
+        #     for i,words in enumerate(gold_wordss):
+        #         for j,w_ in enumerate(words):
+        #             if w==w_ and gold_tagss[i][j] in w_c.noun_tags:
+        #                 w2pos[w][gold_tagss[i][j]] = 1+w2pos[w].setdefault(gold_tagss[i][j],0)
+        #
+        #     wp2freq = list(w2pos[w].items())
+        #     wp2freq.sort(key = lambda x:x[1],reverse=True)
+        #     if len(wp2freq)>0:
+        #         result_dict[wp2freq[0][0]].add(w)
+        #     else:
+        #         result_dict[list(w_c.noun_tags)[random.randint(0,255)%5]].add(w)
 
         for p in result_dict:
             f_ = open(dic_name+'/'+p,'w',encoding='utf-8')
