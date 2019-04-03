@@ -569,7 +569,7 @@ if __name__ == '__main__':
     parser.add_argument('--new_feature',default='1')
     # parser.add_argument('--record',default=None)
     parser.add_argument('--use_pattern_feature',default=False,help='whether use pattern feature')
-    parser.add_argument('--use_closed_set', default='0', help='whether to use penn closed set tag')
+    parser.add_argument('--use_closed_set', default='1', help='whether to use penn closed set tag')
 
     parser.add_argument('--output_tagged',help='the path of the tagged sentenced',default=None)
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
@@ -795,7 +795,7 @@ if __name__ == '__main__':
         e_t.prepareKnowledge(train)
         e_t.weight.weightDict = pickle.load(open(args.enhanced_weight,'rb'))
 
-        e_t.W = w_c.W
+        e_t.W = w_c.W.union(e_t.W)
         e_t.P = w_c.P
 
         ground_true_noun = set()
