@@ -1048,13 +1048,13 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_train',help='ctb or pku')
     parser.add_argument('--dataset_test',help='ctb or pku or novel')
     parser.add_argument('--mode',help='train or test')
-    parser.add_argument('--start_test',default=15,help='the epoch after which start test')
+    parser.add_argument('--start_test',default=10,help='the epoch after which start test')
     parser.add_argument('--pku_dict',help='the common word in pku dict')
     parser.add_argument('--add',default=None)
     parser.add_argument('--new_feature',default='ri')
     parser.add_argument('--data_seed',default=-1,type=int,help='how to seg data')
     parser.add_argument('--use_pattern_feature',default=False)
-    parser.add_argument('--use_closed_set',default='1',help='whether to use penn closed set tag')
+    parser.add_argument('--use_closed_set',default='0',help='whether to use penn closed set tag')
     parser.add_argument('--test_w',default=None,help='the novel W file')
     parser.add_argument('--test_p',default=None,help='the novel P file')
 
@@ -1074,7 +1074,10 @@ if __name__ == '__main__':
 
     if args.mode =='train':
         if args.dataset_train == 'pku':
-            train_p,test_p = loadQiuPKU(args.train,args.data_seed)
+            if args.data_seed != -2:
+                train_p,test_p = loadQiuPKU(args.train,args.data_seed)
+            else:
+                train_p = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train_p,dev_p,test_p = loadCTB3Data(args.train)
         else:
