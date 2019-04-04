@@ -18,7 +18,5 @@
 #
 # for x in d1:
 #     print(d1[x].v)
-f = open('tmp_lxn.txt','r',encoding='utf-8')
-f_o = open('tmp_lxn_1.txt','w',encoding='utf-8')
-for i in range(1000000):
-    print(f.readline().strip(),file=f_o)
+a = {1:2}
+print(set(a))

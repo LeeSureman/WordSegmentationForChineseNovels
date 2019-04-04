@@ -338,7 +338,7 @@ class EnhancedTagger(object):
         self.train_p = self.P
         self.train_w = self.W
 
-        if args.dataset_test == 'novel':
+        if self.args.dataset_test == 'novel':
             w_f = open(args.test_w,'r',encoding='utf-8')
             lines = w_f.readlines()
             for line in lines:
@@ -351,8 +351,16 @@ class EnhancedTagger(object):
                 line = line.strip()
                 self.test_p.add(line)
 
+        print(self.test_w)
+        print(self.test_p)
+
         self.test_p = self.test_p.union(self.P)
         self.test_w = self.test_w.union(self.W)
+
+        print(self.test_w)
+        print(self.test_p)
+
+
 
         print(list(self.P)[:40])
         # print(len(self.P))

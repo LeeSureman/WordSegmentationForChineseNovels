@@ -565,7 +565,7 @@ if __name__ == '__main__':
     # parser.add_argument('--mode',help='train or test')
     parser.add_argument('--pku_dict',default='data/qiu_dict.txt',help='the common word in pku dict')
     parser.add_argument('--add',default='')
-    parser.add_argument('--dataset_train', help='ctb or pku')
+    parser.add_argument('--dataset_train',default='pku', help='ctb or pku')
     parser.add_argument('--new_feature',default='1')
     # parser.add_argument('--record',default=None)
     parser.add_argument('--use_pattern_feature',default=False,help='whether use pattern feature')
@@ -573,7 +573,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--output_tagged',help='the path of the tagged sentenced',default=None)
     parser.add_argument('--is_raw',default=False,help='the data format when tagging',type=bool)
-    parser.add_argument('--mode',help='test or tag')
+    parser.add_argument('--mode',default='test',help='test or tag')
     parser.add_argument('--use_true_info',default=False,type=bool,help='whether to use ground truth noun and pattern')
     parser.add_argument('--just_for_w',default='1')
 
@@ -731,14 +731,14 @@ if __name__ == '__main__':
         w2freq[len(w)] = w2freq.setdefault(len(w),0)+1
     print(w2freq)
 
-    if args.just_for_w=='1':
-        w_fp = open('data/noun_pattern/w_zx_dev_unfull','w',encoding='utf-8')
-        p_fp = open('data/noun_pattern/p_zx_dev_unfull','w',encoding='utf-8')
-        for w in w_c.W:
-            print(w,file=w_fp)
-
-        for p in w_c.P:
-            print(p,file=p_fp)
+    # if args.just_for_w=='1':
+    #     w_fp = open('data/noun_pattern/w_zx_dev_unfull','w',encoding='utf-8')
+    #     p_fp = open('data/noun_pattern/p_zx_dev_unfull','w',encoding='utf-8')
+    #     for w in w_c.W:
+    #         print(w,file=w_fp)
+    #
+    #     for p in w_c.P:
+    #         print(p,file=p_fp)
         # dic_name = 'tmp_noun'
         # if not os.path.exists(dic_name):
         #     os.makedirs(dic_name)
@@ -761,13 +761,13 @@ if __name__ == '__main__':
         #     else:
         #         result_dict[list(w_c.noun_tags)[random.randint(0,255)%5]].add(w)
 
-        for p in result_dict:
-            f_ = open(dic_name+'/'+p,'w',encoding='utf-8')
-            print('\n'+p+':'+'\n')
-            for w in result_dict[p]:
-                print(w,file=f_)
-                print(w)
-        exit()
+        # for p in result_dict:
+        #     f_ = open(dic_name+'/'+p,'w',encoding='utf-8')
+        #     print('\n'+p+':'+'\n')
+        #     for w in result_dict[p]:
+        #         print(w,file=f_)
+        #         print(w)
+        # exit()
 
     e_t = EnhancedTagger(args)
 
@@ -800,10 +800,14 @@ if __name__ == '__main__':
 
 
         e_t.prepareKnowledge(train)
-        e_t.weight.weightDict = pickle.load(open(args.enhanced_weight,'rb'))
 
         e_t.W = w_c.W.union(e_t.W)
         e_t.P = w_c.P
+
+        print(len(e_t.W))
+        print(len(e_t.P))
+        e_t.weight.weightDict = pickle.load(open(args.enhanced_weight,'rb'))
+
 
         ground_true_noun = set()
         for i,words in enumerate(gold_wordss):
