@@ -1090,6 +1090,10 @@ if __name__ == '__main__':
             test_p = loadNovelData(args.test)
 
         t1.prepareKnowledge(train_p)
+        print(len(t1.test_w))
+        print(len(t1.test_p))
+        print(len(t1.train_w))
+        print(len(t1.train_p))
         if args.init_weight:
             t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
 
