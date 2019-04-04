@@ -907,7 +907,7 @@ class EnhancedTagger(object):
             print(j, 'th error: ', n_error, ' / ', len(training_set[2]))
             print('training time_spent:',new_time-old_time)
             old_time = new_time
-            if test_set and j>=int(args.start_test) and j%2==0:
+            if test_set and j>=int(args.start_test) and j%1==0:
                 print("test_set:")
                 if args.record:
                     f_error.write('test_set:\n')
