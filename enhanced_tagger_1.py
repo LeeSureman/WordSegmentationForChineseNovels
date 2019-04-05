@@ -747,6 +747,7 @@ class EnhancedTagger(object):
             self.W = self.train_w
             self.P = self.train_p
         else:
+            print('use test_w,p')
             self.W = self.test_w
             self.P = self.test_p
         assert len(state.word[-1]) == 1
