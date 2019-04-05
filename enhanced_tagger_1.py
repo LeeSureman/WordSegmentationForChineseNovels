@@ -353,7 +353,7 @@ class EnhancedTagger(object):
 
         print('test_w:',len(self.test_w))
         print('test_p',len(self.test_p))
-
+        print('pku_W:',len(self.W))
         print(list(self.test_w)[:40])
         print(list(self.test_p)[:40])
 
