@@ -351,8 +351,8 @@ class EnhancedTagger(object):
                 line = line[:-1]
                 self.test_p.add(line)
 
-        print('test_w:',self.test_w)
-        print('test_p',self.test_p)
+        print('test_w:',len(self.test_w))
+        print('test_p',len(self.test_p))
 
         print(list(self.test_w)[:40])
         print(list(self.test_p)[:40])
@@ -360,8 +360,8 @@ class EnhancedTagger(object):
         self.test_p = self.test_p.union(self.P)
         self.test_w = self.test_w.union(self.W)
 
-        print('test_w:',self.test_w)
-        print('test_p:',self.test_p)
+        print('test_w:',len(self.test_w))
+        print('test_p:',len(self.test_p))
 
 
 
