@@ -18,5 +18,7 @@
 #
 # for x in d1:
 #     print(d1[x].v)
-a = {1:2}
-print(set(a))
+f = open('small.py','r',encoding='utf-8')
+lines = f.readlines()
+for line in lines:
+    print(line)

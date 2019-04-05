@@ -342,13 +342,13 @@ class EnhancedTagger(object):
             w_f = open(args.test_w,'r',encoding='utf-8')
             lines = w_f.readlines()
             for line in lines:
-                line = line.strip()
+                line = line[:-1]
                 self.test_w.add(line)
 
             p_f = open(args.test_p,'r',encoding='utf-8')
             lines = p_f.readlines()
             for line in lines:
-                line = line.strip()
+                line = line[:-1]
                 self.test_p.add(line)
 
         print(self.test_w)
@@ -1111,7 +1111,10 @@ if __name__ == '__main__':
 
     elif args.mode =='test':
         if args.dataset_train == 'pku':
-            train,test = loadQiuPKU(args.train,args.data_seed)
+            if args.data_seed!=-2:
+                train,test = loadQiuPKU(args.train,args.data_seed)
+            else:
+                train = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train,dev,test = loadCTB3Data(args.train)
 
