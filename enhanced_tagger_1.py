@@ -285,8 +285,8 @@ class EnhancedTagger(object):
         for line in lines:
             line = line.strip()
             self.pku_dict.add(line.split('\t')[0])
-        print(self.pku_dict)
-        print('above is pku_dict')
+        # print(self.pku_dict)
+        # print('above is pku_dict')
         states = []
         for i in range(len(training_set[0])):
             states.append(State(training_set[0][i], training_set[1][i], True,whole_s=training_set[2][i]))
@@ -351,21 +351,24 @@ class EnhancedTagger(object):
                 line = line[:-1]
                 self.test_p.add(line)
 
-        print(self.test_w)
-        print(self.test_p)
+        print('test_w:',self.test_w)
+        print('test_p',self.test_p)
+
+        print(list(self.test_w)[:40])
+        print(list(self.test_p)[:40])
 
         self.test_p = self.test_p.union(self.P)
         self.test_w = self.test_w.union(self.W)
 
-        print(self.test_w)
-        print(self.test_p)
+        print('test_w:',self.test_w)
+        print('test_p:',self.test_p)
 
 
 
-        print(list(self.P)[:40])
-        # print(len(self.P))
-
-        print(list(self.W)[:40])
+        # print(list(self.P)[:40])
+        # # print(len(self.P))
+        #
+        # print(list(self.W)[:40])
         # print(len(self.W))
 
 
@@ -1075,12 +1078,12 @@ if __name__ == '__main__':
     t1 = EnhancedTagger(args)
     # train,test = loadNewPeopleDailyData(args.train)
     # t1.prepareKnowledge(train)
-    if args.init_weight:
-        t1.weight.weightDict = pickle.load(open(args.init_weight,'rb'))
 
     # t1.train(train,args.start,args.epoch,test_set=test,args=args)
 
     if args.mode =='train':
+        if args.init_weight:
+            t1.weight.weightDict = pickle.load(open(args.init_weight, 'rb'))
         if args.dataset_train == 'pku':
             if args.data_seed != -2:
                 train_p,test_p = loadQiuPKU(args.train,args.data_seed)
