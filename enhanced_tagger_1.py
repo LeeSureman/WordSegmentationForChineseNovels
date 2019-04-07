@@ -1194,7 +1194,7 @@ if __name__ == '__main__':
             #     tobe_tagged = old_to
             tmp_state = t1.tag(tobe_tagged,False,t1.judge_by_rule(tobe_tagged))
             # print(len(tmp_state.word))
-            for i in range(len(tmp_state.word)):
+            for i in range(2,len(tmp_state.word)-1):
                 print(tmp_state.word[i]+'_'+tmp_state.tag[i]+' ',end='')
 
             print('')
