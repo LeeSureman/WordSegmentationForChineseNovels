@@ -1167,7 +1167,10 @@ if __name__ == '__main__':
 
     elif args.mode == 'tag':
         if args.dataset_train == 'pku':
-            train,test = loadQiuPKU(args.train,args.data_seed)
+            if args.data_seed!=-2:
+                train,test = loadQiuPKU(args.train,args.data_seed)
+            else:
+                train = loadQiuPKU(args.train,args.data_seed)
         elif args.dataset_train == 'ctb':
             train,dev,test = loadCTB3Data(args.train)
 
