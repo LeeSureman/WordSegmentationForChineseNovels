@@ -747,7 +747,7 @@ class EnhancedTagger(object):
             self.W = self.train_w
             self.P = self.train_p
         else:
-            print('use test_w,p')
+            # print('use test_w,p')
             self.W = self.test_w
             self.P = self.test_p
         assert len(state.word[-1]) == 1
@@ -972,8 +972,10 @@ class EnhancedTagger(object):
         joint_correct_num = 0
         predict_all_num = 0
         gold_all_num = 0
+        test = []
         for i in range(len(test_sentence)):
             predict = self.tag(test_sentence[i],False,self.judge_by_rule(test_sentence[i]))
+            test.append(predict)
             # print('predict word:',predict.word)
             # print('predict tag',predict.tag)
             # print('novel word',novel.word)
@@ -987,6 +989,14 @@ class EnhancedTagger(object):
             predict_all_num+=p_a_n
             gold_all_num+=g_a_n
         # print('all kind num',seg_correct_num,joint_correct_num,predict_all_num,gold_all_num)
+        if args.output_tagged is not None:
+            f = open(args.output_tagged,'w',encoding='utf-8')
+            for tmp_state in test:
+                # tmp_state = t1.tag(s,False,t1.judge_by_rule(s))
+                for i in range(2,len(tmp_state.word)-1):
+                    print(tmp_state.word[i]+'_'+tmp_state.tag[i],end=' ',file=f)
+                print('',file=f)
+
 
         seg_precision = seg_correct_num/predict_all_num
         seg_recall = seg_correct_num/gold_all_num
@@ -1069,6 +1079,9 @@ if __name__ == '__main__':
     parser.add_argument('--use_closed_set',default='0',help='whether to use penn closed set tag')
     parser.add_argument('--test_w',default=None,help='the novel W file')
     parser.add_argument('--test_p',default=None,help='the novel P file')
+    parser.add_argument('--output_tagged',default=None,help='the path to output auto-tagged when mode is tag')
+
+
 
     args = parser.parse_args()
 
@@ -1148,9 +1161,9 @@ if __name__ == '__main__':
         result = t1.test(test[2],test_gold_state)
         print('average:',result)
 
-        t1.weight.useRaw()
-        result = t1.test(test[2],test_gold_state)
-        print('unaverage:',result)
+        # t1.weight.useRaw()
+        # result = t1.test(test[2],test_gold_state)
+        # print('unaverage:',result)
 
     elif args.mode == 'tag':
         if args.dataset_train == 'pku':
