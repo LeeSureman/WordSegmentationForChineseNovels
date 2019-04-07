@@ -828,8 +828,10 @@ class BaseTagger(object):
         joint_correct_num = 0
         predict_all_num = 0
         gold_all_num = 0
+        test = []
         for i in range(len(test_sentence)):
             predict = self.tag(test_sentence[i],False,self.judge_by_rule(test_sentence[i]))
+            test.append(predict)
             # print('predict word:',predict.word)
             # print('predict tag',predict.tag)
             # print('novel word',novel.word)
@@ -842,6 +844,13 @@ class BaseTagger(object):
             joint_correct_num+=j_c_n
             predict_all_num+=p_a_n
             gold_all_num+=g_a_n
+        if args.output_tagged is not None:
+            f = open(args.output_tagged,'w',encoding='utf-8')
+            for tmp_state in test:
+                # tmp_state = t1.tag(s,False,t1.judge_by_rule(s))
+                for i in range(2,len(tmp_state.word)-1):
+                    print(tmp_state.word[i]+'_'+tmp_state.tag[i],end=' ',file=f)
+                print('',file=f)
         # print('all kind num',seg_correct_num,joint_correct_num,predict_all_num,gold_all_num)
 
         seg_precision = seg_correct_num/predict_all_num
@@ -992,13 +1001,13 @@ if __name__ == '__main__':
         result = t1.test(test[2],test_gold_state)
         print('average:',result)
 
-        t1.weight.useInt()
-        result = t1.test(test[2], test_gold_state)
-        print('average_int:',result)
-
-        t1.weight.useRaw()
-        result = t1.test(test[2],test_gold_state)
-        print('unaverage:',result)
+        # t1.weight.useInt()
+        # result = t1.test(test[2], test_gold_state)
+        # print('average_int:',result)
+        #
+        # t1.weight.useRaw()
+        # result = t1.test(test[2],test_gold_state)
+        # print('unaverage:',result)
 
 
     elif args.mode == 'tag':
